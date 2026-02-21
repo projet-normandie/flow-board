@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    paths:
+        '%kernel.project_dir%/src/Presentation/Resources/views': 'App'
 
 when@test:
     twig:
