@@ -1,3 +1,3 @@
-dh_auditor:
+mdh_auditor:
     resource: "@DHAuditorBundle/Controller/"
     type: auditor

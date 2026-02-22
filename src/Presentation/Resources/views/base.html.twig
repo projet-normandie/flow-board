@@ -17,7 +17,7 @@
         {% if app.user %}
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{{ path('app_board') }}">
                     <i class="bi bi-kanban me-1"></i>FlowBoard
                 </a>
 
@@ -30,6 +30,18 @@
                 <div class="collapse navbar-collapse" id="navbarMain">
                     <ul class="navbar-nav me-auto">
                         {% block navbar_items %}
+                            <li class="nav-item">
+                                <a class="nav-link{{ app.request.pathInfo starts with '/board' ? ' active' : '' }}" href="{{ path('app_board') }}">
+                                    <i class="bi bi-kanban me-1"></i>{{ 'nav.board'|trans }}
+                                </a>
+                            </li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item">
+                                    <a class="nav-link{{ app.request.pathInfo starts with '/archive' ? ' active' : '' }}" href="{{ path('app_archive_index') }}">
+                                        <i class="bi bi-archive me-1"></i>{{ 'nav.archive'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li class="nav-item">
                                     <a class="nav-link{{ app.request.pathInfo starts with '/admin/projects' ? ' active' : '' }}" href="{{ path('admin_project_index') }}">
@@ -96,5 +108,18 @@
         {% endif %}
 
         {% block body %}{% endblock %}
+
+        {# Ajax Modal Component #}
+        <div id="ajaxModal" class="ajax-modal" style="display: none;">
+            <div class="ajax-modal-dialog">
+                <div class="ajax-modal-content">
+                    <div class="ajax-modal-body text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
