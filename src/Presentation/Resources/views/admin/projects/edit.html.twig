@@ -1,0 +1,11 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}Edit {{ project.name }} — FlowBoard{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Edit project</h1>
+
+    {% include '@App/admin/projects/_form.html.twig' with { button_label: 'Update' } %}
+</div>
+{% endblock %}

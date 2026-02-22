@@ -2,6 +2,7 @@ twig:
     file_name_pattern: '*.twig'
     paths:
         '%kernel.project_dir%/src/Presentation/Resources/views': 'App'
+    form_themes: ['bootstrap_5_layout.html.twig']
 
 when@test:
     twig:
