@@ -25,24 +25,26 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         // --- Users ---
+        $fixturePassword = 'FlowBoard2026!';
+
         $admin = $this->createUser('admin@flowboard.dev', 'Admin', ['ROLE_ADMIN'], JobTitle::PRODUCT_OWNER);
-        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, $fixturePassword));
         $manager->persist($admin);
 
         $superAdmin = $this->createUser('superadmin@flowboard.dev', 'Super Admin', ['ROLE_SUPER_ADMIN'], null);
-        $superAdmin->setPassword($this->passwordHasher->hashPassword($superAdmin, 'superadmin'));
+        $superAdmin->setPassword($this->passwordHasher->hashPassword($superAdmin, $fixturePassword));
         $manager->persist($superAdmin);
 
         $alice = $this->createUser('alice@flowboard.dev', 'Alice Martin', ['ROLE_USER'], JobTitle::DEVELOPER);
-        $alice->setPassword($this->passwordHasher->hashPassword($alice, 'alice'));
+        $alice->setPassword($this->passwordHasher->hashPassword($alice, $fixturePassword));
         $manager->persist($alice);
 
         $bob = $this->createUser('bob@flowboard.dev', 'Bob Dupont', ['ROLE_USER'], JobTitle::TESTER);
-        $bob->setPassword($this->passwordHasher->hashPassword($bob, 'bob'));
+        $bob->setPassword($this->passwordHasher->hashPassword($bob, $fixturePassword));
         $manager->persist($bob);
 
         $charlie = $this->createUser('charlie@flowboard.dev', 'Charlie Durand', ['ROLE_USER'], JobTitle::SYS_ADMIN);
-        $charlie->setPassword($this->passwordHasher->hashPassword($charlie, 'charlie'));
+        $charlie->setPassword($this->passwordHasher->hashPassword($charlie, $fixturePassword));
         $manager->persist($charlie);
 
         // --- Projects ---
