@@ -18,6 +18,7 @@ common.save: Enregistrer
 common.create: Créer
 common.update: Modifier
 common.cancel: Annuler
+common.close: Fermer
 common.yes: Oui
 common.no: Non
 
@@ -76,6 +77,59 @@ user.flash.created: Utilisateur créé avec succès.
 user.flash.updated: Utilisateur modifié avec succès.
 user.flash.deleted: Utilisateur supprimé avec succès.
 user.confirm_delete: Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+
+# Common (extra)
+common.deleted_at: Supprimé le
+
+# Card
+card.title: Cartes
+card.title_field: Titre
+card.description: Description
+card.column: Colonne
+card.project: Projet
+card.priority: Priorité
+card.due_date: Date d'échéance
+card.labels: Labels
+card.assignees: Assignés
+card.new: Nouvelle carte
+card.edit: Modifier la carte
+card.delete: Supprimer
+card.empty: Aucune carte pour le moment.
+card.placeholder.select: "— Sélectionner —"
+card.flash.created: Carte créée avec succès.
+card.flash.updated: Carte modifiée avec succès.
+card.flash.deleted: Carte supprimée avec succès.
+card.confirm_delete: Êtes-vous sûr de vouloir supprimer cette carte ?
+card.show.no_description: Aucune description.
+card.show.author: Auteur
+card.show.edit_btn: Modifier
+card.show.created_on: "Créé le %date%"
+card.priority.low: Basse
+card.priority.medium: Moyenne
+card.priority.high: Haute
+card.priority.critical: Critique
+
+# Comment
+comment.title: Commentaires et activité
+comment.placeholder: Écrivez un commentaire...
+comment.empty: Aucun commentaire pour le moment.
+
+# Board
+board.title: Tableau
+board.filter_project: Filtrer par projet
+board.all_projects: Tous les projets
+board.no_cards: Aucune carte dans cette colonne.
+
+# Archive
+archive.title: Archive
+archive.empty: Aucune carte archivée.
+archive.restore: Restaurer
+archive.flash.restored: Carte restaurée avec succès.
+archive.confirm_restore: Êtes-vous sûr de vouloir restaurer cette carte ?
+
+# Navigation (extra)
+nav.board: Tableau
+nav.archive: Archive
 
 # Locale switcher
 locale.en: English

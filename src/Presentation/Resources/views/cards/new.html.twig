@@ -1,0 +1,11 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}{{ 'card.new'|trans }} — FlowBoard{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>{{ 'card.new'|trans }}</h1>
+
+    {% include '@App/cards/_form.html.twig' with { button_label: 'common.create'|trans } %}
+</div>
+{% endblock %}

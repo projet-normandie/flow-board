@@ -6,6 +6,7 @@ dh_auditor:
         doctrine:
             table_prefix: ~
             table_suffix: '_audit'
+            viewer: true
             ignored_columns:
                 - createdAt
                 - updatedAt

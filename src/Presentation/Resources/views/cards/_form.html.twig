@@ -1,0 +1,36 @@
+{{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.column) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.project) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.priority) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.dueDate) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.labels) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.assignees) }}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg me-1"></i>{{ button_label|default('common.save'|trans) }}
+    </button>
+    <a href="{{ path('app_board') }}" class="btn btn-secondary ms-2">{{ 'common.cancel'|trans }}</a>
+{{ form_end(form) }}

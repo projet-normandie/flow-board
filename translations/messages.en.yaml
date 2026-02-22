@@ -18,6 +18,7 @@ common.save: Save
 common.create: Create
 common.update: Update
 common.cancel: Cancel
+common.close: Close
 common.yes: "Yes"
 common.no: "No"
 
@@ -76,6 +77,59 @@ user.flash.created: User created successfully.
 user.flash.updated: User updated successfully.
 user.flash.deleted: User deleted successfully.
 user.confirm_delete: Are you sure you want to delete this user?
+
+# Common (extra)
+common.deleted_at: Deleted at
+
+# Card
+card.title: Cards
+card.title_field: Title
+card.description: Description
+card.column: Column
+card.project: Project
+card.priority: Priority
+card.due_date: Due date
+card.labels: Labels
+card.assignees: Assignees
+card.new: New card
+card.edit: Edit card
+card.delete: Delete
+card.empty: No cards yet.
+card.placeholder.select: "— Select —"
+card.flash.created: Card created successfully.
+card.flash.updated: Card updated successfully.
+card.flash.deleted: Card deleted successfully.
+card.confirm_delete: Are you sure you want to delete this card?
+card.show.no_description: No description.
+card.show.author: Author
+card.show.edit_btn: Edit
+card.show.created_on: "Created on %date%"
+card.priority.low: Low
+card.priority.medium: Medium
+card.priority.high: High
+card.priority.critical: Critical
+
+# Comment
+comment.title: Comments and activity
+comment.placeholder: Write a comment...
+comment.empty: No comments yet.
+
+# Board
+board.title: Board
+board.filter_project: Filter by project
+board.all_projects: All projects
+board.no_cards: No cards in this column.
+
+# Archive
+archive.title: Archive
+archive.empty: No archived cards.
+archive.restore: Restore
+archive.flash.restored: Card restored successfully.
+archive.confirm_restore: Are you sure you want to restore this card?
+
+# Navigation (extra)
+nav.board: Board
+nav.archive: Archive
 
 # Locale switcher
 locale.en: English

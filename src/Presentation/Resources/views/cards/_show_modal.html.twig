@@ -1,0 +1,124 @@
+<div class="ajax-modal-header">
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-secondary">{{ card.column.name }}</span>
+        <span class="badge rounded-pill" style="background-color: {{ card.project.color }};">
+            {{ card.project.name }}
+        </span>
+    </div>
+    <button type="button" class="ajax-modal-close" onclick="closeAjaxModal()">&times;</button>
+</div>
+<div class="ajax-modal-body">
+    {# Card title #}
+    <h4 class="mb-3">{{ card.title }}</h4>
+
+    {# Meta row #}
+    <div class="d-flex flex-wrap gap-4 mb-4 pb-3 border-bottom">
+        {# Members #}
+        <div>
+            <small class="text-muted d-block mb-1">{{ 'card.assignees'|trans }}</small>
+            {% if card.assignees|length > 0 %}
+                <div class="avatar-group">
+                    {% for assignee in card.assignees %}
+                        <span class="avatar-circle" title="{{ assignee.fullName }}">
+                            {{ assignee.fullName|first|upper }}
+                        </span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <span class="text-muted">—</span>
+            {% endif %}
+        </div>
+
+        {# Labels #}
+        {% if card.labels|length > 0 %}
+            <div>
+                <small class="text-muted d-block mb-1">{{ 'card.labels'|trans }}</small>
+                <div>
+                    {% for label in card.labels %}
+                        <span class="badge rounded-pill" style="background-color: {{ label.color }};">
+                            {{ label.name }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {# Due date #}
+        <div>
+            <small class="text-muted d-block mb-1">{{ 'card.due_date'|trans }}</small>
+            {% if card.dueDate %}
+                {% set now = "now"|date("U") %}
+                {% set due = card.dueDate|date("U") %}
+                {% set diff_days = ((due - now) / 86400)|round(0, 'floor') %}
+                <span class="{% if diff_days < 0 %}text-danger fw-bold{% elseif diff_days < 3 %}text-warning fw-bold{% endif %}">
+                    {{ card.dueDate|date('d/m/Y') }}
+                </span>
+            {% else %}
+                <span class="text-muted">—</span>
+            {% endif %}
+        </div>
+
+        {# Priority #}
+        <div>
+            <small class="text-muted d-block mb-1">{{ 'card.priority'|trans }}</small>
+            {% if card.priority %}
+                <span class="badge card-priority-badge-{{ card.priority.value }}">
+                    {{ ('card.priority.' ~ card.priority.value)|trans }}
+                </span>
+            {% else %}
+                <span class="text-muted">—</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Two-column layout: description left, comments right #}
+    <div class="row">
+        {# Left column: description #}
+        <div class="col-lg-7">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="text-muted mb-0"><i class="bi bi-text-left me-1"></i>{{ 'card.description'|trans }}</h6>
+                {% if is_granted('CARD_EDIT', card) %}
+                    <a href="{{ path('app_card_edit', { id: card.id }) }}" class="btn btn-sm btn-outline-secondary">
+                        {{ 'card.show.edit_btn'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+            {% if card.description %}
+                <div class="card-description ql-editor mb-4">{{ card.description|raw }}</div>
+            {% else %}
+                <p class="text-muted fst-italic mb-4">{{ 'card.show.no_description'|trans }}</p>
+            {% endif %}
+
+            {# Author + dates #}
+            <div class="border-top pt-3 mt-3">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="avatar-circle me-2">{{ card.author.fullName|first|upper }}</span>
+                    <div>
+                        <small class="fw-semibold">{{ card.author.fullName }}</small>
+                        <small class="text-muted d-block">{{ 'card.show.created_on'|trans({ '%date%': card.createdAt|date('d/m/Y H:i') }) }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Right column: comments (placeholder) #}
+        <div class="col-lg-5">
+            <div class="card-comments-section">
+                <h6 class="text-muted mb-3">
+                    <i class="bi bi-chat-left-text me-1"></i>{{ 'comment.title'|trans }}
+                </h6>
+
+                {# Comment input placeholder #}
+                <div class="mb-3">
+                    <textarea class="form-control form-control-sm" rows="2" placeholder="{{ 'comment.placeholder'|trans }}" disabled></textarea>
+                </div>
+
+                {# Empty state #}
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-chat-left d-block mb-2" style="font-size: 1.5rem;"></i>
+                    <small>{{ 'comment.empty'|trans }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
