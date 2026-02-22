@@ -29,7 +29,15 @@
 
                 <div class="collapse navbar-collapse" id="navbarMain">
                     <ul class="navbar-nav me-auto">
-                        {% block navbar_items %}{% endblock %}
+                        {% block navbar_items %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item">
+                                    <a class="nav-link{{ app.request.pathInfo starts with '/admin/projects' ? ' active' : '' }}" href="{{ path('admin_project_index') }}">
+                                        <i class="bi bi-folder me-1"></i>Projects
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endblock %}
                     </ul>
 
                     <ul class="navbar-nav">
