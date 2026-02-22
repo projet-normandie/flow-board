@@ -41,6 +41,11 @@
                                         <i class="bi bi-tags me-1"></i>Labels
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link{{ app.request.pathInfo starts with '/admin/columns' ? ' active' : '' }}" href="{{ path('admin_column_index') }}">
+                                        <i class="bi bi-layout-three-columns me-1"></i>Columns
+                                    </a>
+                                </li>
                             {% endif %}
                         {% endblock %}
                     </ul>

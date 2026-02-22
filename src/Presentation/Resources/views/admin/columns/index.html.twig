@@ -1,0 +1,50 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}Columns — FlowBoard{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Columns</h1>
+        <a href="{{ path('admin_column_new') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>New column
+        </a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Name</th>
+                <th>Created at</th>
+                <th>Updated at</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for column in columns %}
+                <tr>
+                    <td>{{ column.position }}</td>
+                    <td>{{ column.name }}</td>
+                    <td>{{ column.createdAt ? column.createdAt|date('Y-m-d H:i') : '—' }}</td>
+                    <td>{{ column.updatedAt ? column.updatedAt|date('Y-m-d H:i') : '—' }}</td>
+                    <td>
+                        <a href="{{ path('admin_column_edit', { id: column.id }) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        {% include '@App/admin/columns/_delete_form.html.twig' %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted text-center">No columns yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
