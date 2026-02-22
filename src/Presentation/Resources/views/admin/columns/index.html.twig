@@ -1,28 +1,28 @@
 {% extends '@App/base.html.twig' %}
 
-{% block title %}Columns — FlowBoard{% endblock %}
+{% block title %}{{ 'column.title'|trans }} — FlowBoard{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Columns</h1>
+        <h1>{{ 'column.title'|trans }}</h1>
         <a href="{{ path('admin_column_new') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-1"></i>New column
+            <i class="bi bi-plus-lg me-1"></i>{{ 'column.new'|trans }}
         </a>
     </div>
 
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
+        <div class="alert alert-success">{{ message|trans }}</div>
     {% endfor %}
 
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Position</th>
-                <th>Name</th>
-                <th>Created at</th>
-                <th>Updated at</th>
-                <th>Actions</th>
+                <th>{{ 'common.position'|trans }}</th>
+                <th>{{ 'common.name'|trans }}</th>
+                <th>{{ 'common.created_at'|trans }}</th>
+                <th>{{ 'common.updated_at'|trans }}</th>
+                <th>{{ 'common.actions'|trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5" class="text-muted text-center">No columns yet.</td>
+                    <td colspan="5" class="text-muted text-center">{{ 'column.empty'|trans }}</td>
                 </tr>
             {% endfor %}
         </tbody>

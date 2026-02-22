@@ -1,28 +1,28 @@
 {% extends '@App/base.html.twig' %}
 
-{% block title %}Projects — FlowBoard{% endblock %}
+{% block title %}{{ 'project.title'|trans }} — FlowBoard{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Projects</h1>
+        <h1>{{ 'project.title'|trans }}</h1>
         <a href="{{ path('admin_project_new') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-1"></i>New project
+            <i class="bi bi-plus-lg me-1"></i>{{ 'project.new'|trans }}
         </a>
     </div>
 
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
+        <div class="alert alert-success">{{ message|trans }}</div>
     {% endfor %}
 
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Color</th>
-                <th>Created at</th>
-                <th>Updated at</th>
-                <th>Actions</th>
+                <th>{{ 'common.name'|trans }}</th>
+                <th>{{ 'common.color'|trans }}</th>
+                <th>{{ 'common.created_at'|trans }}</th>
+                <th>{{ 'common.updated_at'|trans }}</th>
+                <th>{{ 'common.actions'|trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +44,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5" class="text-muted text-center">No projects yet.</td>
+                    <td colspan="5" class="text-muted text-center">{{ 'project.empty'|trans }}</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -20,11 +20,11 @@ class ProjectFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Name',
+                'label' => 'common.name',
                 'required' => true,
             ])
             ->add('color', ColorType::class, [
-                'label' => 'Color',
+                'label' => 'common.color',
             ]);
     }
 

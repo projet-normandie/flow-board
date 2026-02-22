@@ -2,7 +2,7 @@
     {{ form_row(form.name) }}
     {{ form_row(form.color) }}
     <button type="submit" class="btn btn-primary">
-        <i class="bi bi-check-lg me-1"></i>{{ button_label|default('Save') }}
+        <i class="bi bi-check-lg me-1"></i>{{ button_label|default('common.save'|trans) }}
     </button>
-    <a href="{{ path('admin_label_index') }}" class="btn btn-secondary ms-2">Cancel</a>
+    <a href="{{ path('admin_label_index') }}" class="btn btn-secondary ms-2">{{ 'common.cancel'|trans }}</a>
 {{ form_end(form) }}

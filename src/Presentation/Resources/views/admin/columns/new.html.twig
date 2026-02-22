@@ -1,11 +1,11 @@
 {% extends '@App/base.html.twig' %}
 
-{% block title %}New column — FlowBoard{% endblock %}
+{% block title %}{{ 'column.new'|trans }} — FlowBoard{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <h1>New column</h1>
+    <h1>{{ 'column.new'|trans }}</h1>
 
-    {% include '@App/admin/columns/_form.html.twig' with { button_label: 'Create' } %}
+    {% include '@App/admin/columns/_form.html.twig' with { button_label: 'common.create'|trans } %}
 </div>
 {% endblock %}

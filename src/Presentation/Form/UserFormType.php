@@ -29,15 +29,15 @@ class UserFormType extends AbstractType
 
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'Email',
+                'label' => 'common.email',
                 'required' => true,
             ])
             ->add('fullName', TextType::class, [
-                'label' => 'Full name',
+                'label' => 'user.full_name',
                 'required' => true,
             ])
             ->add('plainPassword', PasswordType::class, [
-                'label' => 'Password',
+                'label' => 'common.password',
                 'mapped' => false,
                 'required' => !$isEdit,
                 'constraints' => $isEdit ? [] : [
@@ -49,7 +49,7 @@ class UserFormType extends AbstractType
                 ],
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'Roles',
+                'label' => 'user.roles',
                 'choices' => [
                     'Admin' => 'ROLE_ADMIN',
                     'Super Admin' => 'ROLE_SUPER_ADMIN',
@@ -60,12 +60,12 @@ class UserFormType extends AbstractType
             ])
             ->add('jobTitle', EnumType::class, [
                 'class' => JobTitle::class,
-                'label' => 'Job title',
+                'label' => 'user.job_title',
                 'required' => false,
-                'placeholder' => '— Select —',
+                'placeholder' => 'user.placeholder.select',
             ])
             ->add('enabled', CheckboxType::class, [
-                'label' => 'Enabled',
+                'label' => 'user.enabled',
                 'required' => false,
             ]);
     }
