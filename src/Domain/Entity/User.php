@@ -44,12 +44,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $enabled = true;
 
-    #[ORM\Column(length: 64, unique: true, nullable: true)]
-    private ?string $invitationToken = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $invitationTokenExpiresAt = null;
-
     /** @var Collection<int, Card> */
     #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'author')]
     private Collection $authoredCards;
@@ -172,37 +166,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCards(): Collection
     {
         return $this->cards;
-    }
-
-    public function getInvitationToken(): ?string
-    {
-        return $this->invitationToken;
-    }
-
-    public function setInvitationToken(?string $invitationToken): static
-    {
-        $this->invitationToken = $invitationToken;
-
-        return $this;
-    }
-
-    public function getInvitationTokenExpiresAt(): ?\DateTimeImmutable
-    {
-        return $this->invitationTokenExpiresAt;
-    }
-
-    public function setInvitationTokenExpiresAt(?\DateTimeImmutable $invitationTokenExpiresAt): static
-    {
-        $this->invitationTokenExpiresAt = $invitationTokenExpiresAt;
-
-        return $this;
-    }
-
-    public function isInvitationTokenValid(): bool
-    {
-        return $this->invitationToken !== null
-            && $this->invitationTokenExpiresAt !== null
-            && $this->invitationTokenExpiresAt > new \DateTimeImmutable();
     }
 
     public function eraseCredentials(): void

@@ -99,54 +99,6 @@ final class UserTest extends TestCase
         self::assertCount(0, $this->user->getCards());
     }
 
-    public function testInvitationTokenIsNullByDefault(): void
-    {
-        self::assertNull($this->user->getInvitationToken());
-        self::assertNull($this->user->getInvitationTokenExpiresAt());
-    }
-
-    public function testSetInvitationToken(): void
-    {
-        $this->user->setInvitationToken('abc123');
-        self::assertSame('abc123', $this->user->getInvitationToken());
-
-        $this->user->setInvitationToken(null);
-        self::assertNull($this->user->getInvitationToken());
-    }
-
-    public function testSetInvitationTokenExpiresAt(): void
-    {
-        $date = new \DateTimeImmutable('+1 day');
-        $this->user->setInvitationTokenExpiresAt($date);
-        self::assertSame($date, $this->user->getInvitationTokenExpiresAt());
-    }
-
-    public function testIsInvitationTokenValidWhenValid(): void
-    {
-        $this->user->setInvitationToken('token123');
-        $this->user->setInvitationTokenExpiresAt(new \DateTimeImmutable('+1 hour'));
-        self::assertTrue($this->user->isInvitationTokenValid());
-    }
-
-    public function testIsInvitationTokenInvalidWhenExpired(): void
-    {
-        $this->user->setInvitationToken('token123');
-        $this->user->setInvitationTokenExpiresAt(new \DateTimeImmutable('-1 hour'));
-        self::assertFalse($this->user->isInvitationTokenValid());
-    }
-
-    public function testIsInvitationTokenInvalidWhenNoToken(): void
-    {
-        $this->user->setInvitationTokenExpiresAt(new \DateTimeImmutable('+1 hour'));
-        self::assertFalse($this->user->isInvitationTokenValid());
-    }
-
-    public function testIsInvitationTokenInvalidWhenNoExpiry(): void
-    {
-        $this->user->setInvitationToken('token123');
-        self::assertFalse($this->user->isInvitationTokenValid());
-    }
-
     public function testEraseCredentialsDoesNotThrow(): void
     {
         $this->user->eraseCredentials();
@@ -161,9 +113,7 @@ final class UserTest extends TestCase
             ->setFullName('Name')
             ->setRoles(['ROLE_ADMIN'])
             ->setJobTitle(JobTitle::TESTER)
-            ->setEnabled(false)
-            ->setInvitationToken('token')
-            ->setInvitationTokenExpiresAt(new \DateTimeImmutable('+1 day'));
+            ->setEnabled(false);
 
         self::assertSame($this->user, $result);
     }
