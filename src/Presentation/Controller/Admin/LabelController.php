@@ -37,7 +37,7 @@ class LabelController extends AbstractController
             $entityManager->persist($label);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Label created successfully.');
+            $this->addFlash('success', 'label.flash.created');
 
             return $this->redirectToRoute('admin_label_index');
         }
@@ -57,7 +57,7 @@ class LabelController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'Label updated successfully.');
+            $this->addFlash('success', 'label.flash.updated');
 
             return $this->redirectToRoute('admin_label_index');
         }
@@ -77,7 +77,7 @@ class LabelController extends AbstractController
             $entityManager->remove($label);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Label deleted successfully.');
+            $this->addFlash('success', 'label.flash.deleted');
         }
 
         return $this->redirectToRoute('admin_label_index');

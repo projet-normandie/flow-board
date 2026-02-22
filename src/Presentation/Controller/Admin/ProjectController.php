@@ -37,7 +37,7 @@ class ProjectController extends AbstractController
             $entityManager->persist($project);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Project created successfully.');
+            $this->addFlash('success', 'project.flash.created');
 
             return $this->redirectToRoute('admin_project_index');
         }
@@ -57,7 +57,7 @@ class ProjectController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'Project updated successfully.');
+            $this->addFlash('success', 'project.flash.updated');
 
             return $this->redirectToRoute('admin_project_index');
         }
@@ -77,7 +77,7 @@ class ProjectController extends AbstractController
             $entityManager->remove($project);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Project deleted successfully.');
+            $this->addFlash('success', 'project.flash.deleted');
         }
 
         return $this->redirectToRoute('admin_project_index');

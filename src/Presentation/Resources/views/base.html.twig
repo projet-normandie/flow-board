@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale }}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,24 +33,24 @@
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li class="nav-item">
                                     <a class="nav-link{{ app.request.pathInfo starts with '/admin/projects' ? ' active' : '' }}" href="{{ path('admin_project_index') }}">
-                                        <i class="bi bi-folder me-1"></i>Projects
+                                        <i class="bi bi-folder me-1"></i>{{ 'nav.projects'|trans }}
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link{{ app.request.pathInfo starts with '/admin/labels' ? ' active' : '' }}" href="{{ path('admin_label_index') }}">
-                                        <i class="bi bi-tags me-1"></i>Labels
+                                        <i class="bi bi-tags me-1"></i>{{ 'nav.labels'|trans }}
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link{{ app.request.pathInfo starts with '/admin/columns' ? ' active' : '' }}" href="{{ path('admin_column_index') }}">
-                                        <i class="bi bi-layout-three-columns me-1"></i>Columns
+                                        <i class="bi bi-layout-three-columns me-1"></i>{{ 'nav.columns'|trans }}
                                     </a>
                                 </li>
                             {% endif %}
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                 <li class="nav-item">
                                     <a class="nav-link{{ app.request.pathInfo starts with '/admin/users' ? ' active' : '' }}" href="{{ path('admin_user_index') }}">
-                                        <i class="bi bi-people me-1"></i>Users
+                                        <i class="bi bi-people me-1"></i>{{ 'nav.users'|trans }}
                                     </a>
                                 </li>
                             {% endif %}
@@ -61,12 +61,30 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-translate me-1"></i>{{ ('locale.' ~ app.request.locale)|trans }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item{{ app.request.locale == 'en' ? ' active' : '' }}" href="{{ path('app_switch_locale', { locale: 'en' }) }}">
+                                        {{ 'locale.en'|trans }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item{{ app.request.locale == 'fr' ? ' active' : '' }}" href="{{ path('app_switch_locale', { locale: 'fr' }) }}">
+                                        {{ 'locale.fr'|trans }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-person-circle me-1"></i>{{ app.user.fullName }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <a class="dropdown-item" href="{{ path('app_logout') }}">
-                                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                                        <i class="bi bi-box-arrow-right me-1"></i>{{ 'nav.logout'|trans }}
                                     </a>
                                 </li>
                             </ul>

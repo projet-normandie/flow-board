@@ -1,0 +1,82 @@
+# Navigation
+nav.projects: Projets
+nav.labels: Labels
+nav.columns: Colonnes
+nav.users: Utilisateurs
+nav.logout: Déconnexion
+
+# Common
+common.name: Nom
+common.color: Couleur
+common.position: Position
+common.email: Email
+common.password: Mot de passe
+common.created_at: Créé le
+common.updated_at: Modifié le
+common.actions: Actions
+common.save: Enregistrer
+common.create: Créer
+common.update: Modifier
+common.cancel: Annuler
+common.yes: Oui
+common.no: Non
+
+# Login
+login.title: Connexion
+login.email: Email
+login.password: Mot de passe
+login.remember_me: Se souvenir de moi
+login.sign_in: Se connecter
+
+# Dashboard
+dashboard.title: Tableau de bord
+dashboard.welcome: "Bienvenue, %name%."
+
+# Project
+project.title: Projets
+project.new: Nouveau projet
+project.edit: Modifier le projet
+project.empty: Aucun projet pour le moment.
+project.flash.created: Projet créé avec succès.
+project.flash.updated: Projet modifié avec succès.
+project.flash.deleted: Projet supprimé avec succès.
+project.confirm_delete: Êtes-vous sûr de vouloir supprimer ce projet ?
+
+# Label
+label.title: Labels
+label.new: Nouveau label
+label.edit: Modifier le label
+label.empty: Aucun label pour le moment.
+label.flash.created: Label créé avec succès.
+label.flash.updated: Label modifié avec succès.
+label.flash.deleted: Label supprimé avec succès.
+label.confirm_delete: Êtes-vous sûr de vouloir supprimer ce label ?
+
+# Column
+column.title: Colonnes
+column.new: Nouvelle colonne
+column.edit: Modifier la colonne
+column.empty: Aucune colonne pour le moment.
+column.flash.created: Colonne créée avec succès.
+column.flash.updated: Colonne modifiée avec succès.
+column.flash.deleted: Colonne supprimée avec succès.
+column.confirm_delete: Êtes-vous sûr de vouloir supprimer cette colonne ?
+
+# User
+user.title: Utilisateurs
+user.new: Nouvel utilisateur
+user.edit: Modifier l'utilisateur
+user.empty: Aucun utilisateur pour le moment.
+user.full_name: Nom complet
+user.roles: Rôles
+user.job_title: Poste
+user.enabled: Activé
+user.placeholder.select: "— Sélectionner —"
+user.flash.created: Utilisateur créé avec succès.
+user.flash.updated: Utilisateur modifié avec succès.
+user.flash.deleted: Utilisateur supprimé avec succès.
+user.confirm_delete: Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+
+# Locale switcher
+locale.en: English
+locale.fr: Français

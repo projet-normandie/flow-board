@@ -37,7 +37,7 @@ class ColumnController extends AbstractController
             $entityManager->persist($column);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Column created successfully.');
+            $this->addFlash('success', 'column.flash.created');
 
             return $this->redirectToRoute('admin_column_index');
         }
@@ -57,7 +57,7 @@ class ColumnController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'Column updated successfully.');
+            $this->addFlash('success', 'column.flash.updated');
 
             return $this->redirectToRoute('admin_column_index');
         }
@@ -77,7 +77,7 @@ class ColumnController extends AbstractController
             $entityManager->remove($column);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Column deleted successfully.');
+            $this->addFlash('success', 'column.flash.deleted');
         }
 
         return $this->redirectToRoute('admin_column_index');

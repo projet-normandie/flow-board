@@ -1,11 +1,11 @@
 {% extends '@App/base.html.twig' %}
 
-{% block title %}Edit {{ user.fullName }} — FlowBoard{% endblock %}
+{% block title %}{{ 'user.edit'|trans }} — FlowBoard{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <h1>Edit user</h1>
+    <h1>{{ 'user.edit'|trans }}</h1>
 
-    {% include '@App/admin/users/_form.html.twig' with { button_label: 'Update' } %}
+    {% include '@App/admin/users/_form.html.twig' with { button_label: 'common.update'|trans } %}
 </div>
 {% endblock %}

@@ -1,10 +1,10 @@
 {% extends '@App/base.html.twig' %}
 
-{% block title %}Dashboard — FlowBoard{% endblock %}
+{% block title %}{{ 'dashboard.title'|trans }} — FlowBoard{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <h1>Dashboard</h1>
-    <p>Welcome, {{ app.user.fullName }}.</p>
+    <h1>{{ 'dashboard.title'|trans }}</h1>
+    <p>{{ 'dashboard.welcome'|trans({ '%name%': app.user.fullName }) }}</p>
 </div>
 {% endblock %}

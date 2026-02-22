@@ -20,11 +20,11 @@ class ColumnFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Name',
+                'label' => 'common.name',
                 'required' => true,
             ])
             ->add('position', IntegerType::class, [
-                'label' => 'Position',
+                'label' => 'common.position',
                 'required' => true,
             ]);
     }
