@@ -1,0 +1,53 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}Labels — FlowBoard{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Labels</h1>
+        <a href="{{ path('admin_label_new') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>New label
+        </a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Color</th>
+                <th>Created at</th>
+                <th>Updated at</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for label in labels %}
+                <tr>
+                    <td>{{ label.name }}</td>
+                    <td>
+                        <span class="d-inline-block rounded-circle" style="width: 20px; height: 20px; background-color: {{ label.color }};"></span>
+                        {{ label.color }}
+                    </td>
+                    <td>{{ label.createdAt ? label.createdAt|date('Y-m-d H:i') : '—' }}</td>
+                    <td>{{ label.updatedAt ? label.updatedAt|date('Y-m-d H:i') : '—' }}</td>
+                    <td>
+                        <a href="{{ path('admin_label_edit', { id: label.id }) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        {% include '@App/admin/labels/_delete_form.html.twig' %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted text-center">No labels yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
