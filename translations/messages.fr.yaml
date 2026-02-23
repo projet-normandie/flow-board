@@ -127,6 +127,19 @@ archive.restore: Restaurer
 archive.flash.restored: Carte restaurée avec succès.
 archive.confirm_restore: Êtes-vous sûr de vouloir restaurer cette carte ?
 
+# Admin
+admin.title: Administration
+admin.dashboard: Tableau de bord
+admin.audit: Audit
+admin.stats.projects: Projets
+admin.stats.columns: Colonnes
+admin.stats.labels: Labels
+admin.stats.cards: Cartes
+admin.stats.users: Utilisateurs
+
+# Theme
+theme.toggle: Changer le thème
+
 # Navigation (extra)
 nav.board: Tableau
 nav.archive: Archive

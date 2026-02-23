@@ -1,0 +1,89 @@
+{% extends '@App/admin/layout.html.twig' %}
+
+{% block title %}{{ 'admin.dashboard'|trans }} — FlowBoard{% endblock %}
+
+{% block admin_content %}
+    <h1 class="mb-4">{{ 'admin.dashboard'|trans }}</h1>
+
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-4">
+            <div class="card admin-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">{{ 'admin.stats.projects'|trans }}</h6>
+                            <h2 class="mb-0">{{ projectCount }}</h2>
+                        </div>
+                        <div class="admin-stat-icon">
+                            <i class="bi bi-folder"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-4">
+            <div class="card admin-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">{{ 'admin.stats.columns'|trans }}</h6>
+                            <h2 class="mb-0">{{ columnCount }}</h2>
+                        </div>
+                        <div class="admin-stat-icon">
+                            <i class="bi bi-layout-three-columns"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-4">
+            <div class="card admin-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">{{ 'admin.stats.labels'|trans }}</h6>
+                            <h2 class="mb-0">{{ labelCount }}</h2>
+                        </div>
+                        <div class="admin-stat-icon">
+                            <i class="bi bi-tags"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-4">
+            <div class="card admin-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">{{ 'admin.stats.cards'|trans }}</h6>
+                            <h2 class="mb-0">{{ cardCount }}</h2>
+                        </div>
+                        <div class="admin-stat-icon">
+                            <i class="bi bi-kanban"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-4">
+            <div class="card admin-stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title text-muted mb-1">{{ 'admin.stats.users'|trans }}</h6>
+                            <h2 class="mb-0">{{ userCount }}</h2>
+                        </div>
+                        <div class="admin-stat-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

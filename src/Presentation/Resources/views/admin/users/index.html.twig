@@ -1,9 +1,8 @@
-{% extends '@App/base.html.twig' %}
+{% extends '@App/admin/layout.html.twig' %}
 
 {% block title %}{{ 'user.title'|trans }} — FlowBoard{% endblock %}
 
-{% block body %}
-<div class="container mt-4">
+{% block admin_content %}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>{{ 'user.title'|trans }}</h1>
         <a href="{{ path('admin_user_new') }}" class="btn btn-primary">
@@ -60,5 +59,4 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
 {% endblock %}
