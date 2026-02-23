@@ -7,6 +7,55 @@ import './styles/app.scss';
 import 'bootstrap';
 
 // ============================================
+// Theme Toggle (Light / Dark)
+// ============================================
+
+function getStoredTheme() {
+    return localStorage.getItem('theme');
+}
+
+function setStoredTheme(theme) {
+    localStorage.setItem('theme', theme);
+}
+
+function getPreferredTheme() {
+    const storedTheme = getStoredTheme();
+    if (storedTheme) {
+        return storedTheme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        if (icon) {
+            icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+        }
+    }
+}
+
+window.toggleTheme = function() {
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    setStoredTheme(newTheme);
+};
+
+// Apply preferred theme immediately
+setTheme(getPreferredTheme());
+
+// Listen for system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!getStoredTheme()) {
+        setTheme(e.matches ? 'dark' : 'light');
+    }
+});
+
+// ============================================
 // Ajax Modal Component
 // ============================================
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}">
+<html lang="{{ app.request.locale }}" data-bs-theme="light">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,25 +44,8 @@
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li class="nav-item">
-                                    <a class="nav-link{{ app.request.pathInfo starts with '/admin/projects' ? ' active' : '' }}" href="{{ path('admin_project_index') }}">
-                                        <i class="bi bi-folder me-1"></i>{{ 'nav.projects'|trans }}
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link{{ app.request.pathInfo starts with '/admin/labels' ? ' active' : '' }}" href="{{ path('admin_label_index') }}">
-                                        <i class="bi bi-tags me-1"></i>{{ 'nav.labels'|trans }}
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link{{ app.request.pathInfo starts with '/admin/columns' ? ' active' : '' }}" href="{{ path('admin_column_index') }}">
-                                        <i class="bi bi-layout-three-columns me-1"></i>{{ 'nav.columns'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                <li class="nav-item">
-                                    <a class="nav-link{{ app.request.pathInfo starts with '/admin/users' ? ' active' : '' }}" href="{{ path('admin_user_index') }}">
-                                        <i class="bi bi-people me-1"></i>{{ 'nav.users'|trans }}
+                                    <a class="nav-link{{ app.request.pathInfo starts with '/admin' ? ' active' : '' }}" href="{{ path('admin_dashboard') }}">
+                                        <i class="bi bi-gear me-1"></i>{{ 'admin.title'|trans }}
                                     </a>
                                 </li>
                             {% endif %}
@@ -70,6 +53,11 @@
                     </ul>
 
                     <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <button class="nav-link btn btn-link" id="theme-toggle" onclick="toggleTheme()" aria-label="{{ 'theme.toggle'|trans }}">
+                                <i class="bi bi-moon-fill"></i>
+                            </button>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">

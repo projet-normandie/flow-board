@@ -21,7 +21,61 @@
 }
 
 body {
-    background-color: skyblue;
+    background-color: #f5f6fa;
+}
+
+// Dark mode overrides
+[data-bs-theme="dark"] {
+    body {
+        background-color: #1a1d21;
+    }
+
+    .admin-sidebar {
+        background-color: #111315;
+        border-right-color: rgba(255, 255, 255, 0.1);
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+
+            &:hover {
+                color: #fff;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            &.active {
+                color: #fff;
+                background-color: rgba(255, 255, 255, 0.15);
+            }
+        }
+    }
+
+    .admin-sidebar-heading {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .admin-stat-card {
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .admin-stat-icon {
+        background-color: rgba(255, 255, 255, 0.1);
+
+        i {
+            color: #adb5bd;
+        }
+    }
+
+    .board-column {
+        background-color: #2b2f33;
+    }
+
+    .board-column-header {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .card-item {
+        background-color: var(--bs-tertiary-bg);
+    }
 }
 
 // Board
@@ -151,6 +205,64 @@ body {
 .card-priority-badge-critical {
     background-color: #ef4444;
     color: #fff;
+}
+
+// Admin Sidebar
+.admin-sidebar {
+    background-color: #f0f1f3;
+    min-height: calc(100vh - 56px);
+    padding-top: 0;
+    border-right: 1px solid #dee2e6;
+
+    .nav-link {
+        color: #495057;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+
+        &:hover {
+            color: #212529;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        &.active {
+            color: #212529;
+            font-weight: 500;
+            background-color: rgba(0, 0, 0, 0.08);
+        }
+    }
+}
+
+.admin-sidebar-heading {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+}
+
+// Admin Dashboard Cards
+.admin-stat-card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.admin-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.5rem;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+        font-size: 1.4rem;
+        color: #495057;
+    }
 }
 
 // Ajax Modal
