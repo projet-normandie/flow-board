@@ -19,6 +19,7 @@
             <tr>
                 <th>{{ 'common.position'|trans }}</th>
                 <th>{{ 'common.name'|trans }}</th>
+                <th>{{ 'column.board'|trans }}</th>
                 <th>{{ 'common.created_at'|trans }}</th>
                 <th>{{ 'common.updated_at'|trans }}</th>
                 <th>{{ 'common.actions'|trans }}</th>
@@ -29,6 +30,12 @@
                 <tr>
                     <td>{{ column.position }}</td>
                     <td>{{ column.name }}</td>
+                    <td>
+                        <span class="badge rounded-pill" style="background-color: {{ column.board.project.color }};">
+                            {{ column.board.project.name }}
+                        </span>
+                        <span class="ms-1 text-muted small">{{ column.board.name }}</span>
+                    </td>
                     <td>{{ column.createdAt ? column.createdAt|date('Y-m-d H:i') : '—' }}</td>
                     <td>{{ column.updatedAt ? column.updatedAt|date('Y-m-d H:i') : '—' }}</td>
                     <td>
@@ -40,7 +47,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5" class="text-muted text-center">{{ 'column.empty'|trans }}</td>
+                    <td colspan="6" class="text-muted text-center">{{ 'column.empty'|trans }}</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -1,6 +1,6 @@
 {% extends '@App/base.html.twig' %}
 
-{% block title %}{{ 'board.title'|trans }} — FlowBoard{% endblock %}
+{% block title %}{{ board.name }} — {{ board.project.name }} — FlowBoard{% endblock %}
 
 {% block body %}
 <div class="container-fluid mt-3 px-3">
@@ -12,15 +12,19 @@
     {% endfor %}
 
     <div class="d-flex align-items-center justify-content-between mb-3">
-        <h1 class="h3 mb-0">
-            <i class="bi bi-kanban me-2"></i>{{ 'board.title'|trans }}
-        </h1>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge rounded-pill" style="background-color: {{ board.project.color }}; font-size: 0.85em;">
+                {{ board.project.name }}
+            </span>
+            <h1 class="h3 mb-0">
+                <i class="bi bi-kanban me-2"></i>{{ board.name }}
+            </h1>
+        </div>
         <div class="d-flex align-items-center gap-3">
-            <select class="form-select form-select-sm" style="width: auto;" onchange="window.location.href = this.value ? '{{ path('app_board') }}?project=' + this.value : '{{ path('app_board') }}'">
-                <option value="">{{ 'board.all_projects'|trans }}</option>
-                {% for project in projects %}
-                    <option value="{{ project.id }}" {{ selectedProject and selectedProject.id == project.id ? 'selected' : '' }}>
-                        {{ project.name }}
+            <select class="form-select form-select-sm" style="width: auto;" onchange="window.location.href = '{{ path('app_board', { id: '__ID__' }) }}'.replace('__ID__', this.value)">
+                {% for b in boards %}
+                    <option value="{{ b.id }}" {{ b.id == board.id ? 'selected' : '' }}>
+                        {{ b.project.name }} — {{ b.name }}
                     </option>
                 {% endfor %}
             </select>
@@ -34,24 +38,15 @@
 
     <div class="board-container" data-controller="sortable">
         {% for column in columns %}
+            {% set columnCards = cardsByColumn[column.id] ?? [] %}
             <div class="board-column">
                 <div class="board-column-header">
                     <span class="fw-semibold">{{ column.name }}</span>
-                    <span class="badge bg-secondary ms-2">
-                        {% set count = 0 %}
-                        {% for card in column.cards %}
-                            {% if not selectedProject or card.project.id == selectedProject.id %}
-                                {% set count = count + 1 %}
-                            {% endif %}
-                        {% endfor %}
-                        {{ count }}
-                    </span>
+                    <span class="badge bg-secondary ms-2">{{ columnCards|length }}</span>
                 </div>
                 <div class="board-column-body sortable-list" data-sortable-column-id="{{ column.id }}">
-                    {% for card in column.cards %}
-                        {% if not selectedProject or card.project.id == selectedProject.id %}
-                            {% include '@App/board/_card.html.twig' %}
-                        {% endif %}
+                    {% for card in columnCards %}
+                        {% include '@App/board/_card.html.twig' %}
                     {% endfor %}
                 </div>
             </div>

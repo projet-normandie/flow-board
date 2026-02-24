@@ -1,0 +1,9 @@
+{% extends '@App/admin/layout.html.twig' %}
+
+{% block title %}{{ 'board.new'|trans }} — FlowBoard{% endblock %}
+
+{% block admin_content %}
+    <h1>{{ 'board.new'|trans }}</h1>
+
+    {% include '@App/admin/boards/_form.html.twig' with { button_label: 'common.create'|trans } %}
+{% endblock %}

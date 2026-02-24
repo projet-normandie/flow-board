@@ -8,7 +8,6 @@ use App\Domain\Entity\Card;
 use App\Domain\Entity\Column;
 use App\Domain\Entity\Enum\CardPriority;
 use App\Domain\Entity\Label;
-use App\Domain\Entity\Project;
 use App\Domain\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -44,10 +43,6 @@ class CardFormType extends AbstractType
                 'label' => 'card.column',
                 'query_builder' => fn ($repository) => $repository->createQueryBuilder('c')
                     ->orderBy('c.position', 'ASC'),
-            ])
-            ->add('project', EntityType::class, [
-                'class' => Project::class,
-                'label' => 'card.project',
             ])
             ->add('priority', EnumType::class, [
                 'class' => CardPriority::class,

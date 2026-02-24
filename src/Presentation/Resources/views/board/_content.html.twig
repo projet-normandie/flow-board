@@ -1,0 +1,16 @@
+<div class="board-container" data-controller="sortable">
+    {% for column in columns %}
+        {% set columnCards = cardsByColumn[column.id] ?? [] %}
+        <div class="board-column">
+            <div class="board-column-header">
+                <span class="fw-semibold">{{ column.name }}</span>
+                <span class="badge bg-secondary ms-2">{{ columnCards|length }}</span>
+            </div>
+            <div class="board-column-body sortable-list" data-sortable-column-id="{{ column.id }}">
+                {% for card in columnCards %}
+                    {% include '@App/board/_card.html.twig' %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

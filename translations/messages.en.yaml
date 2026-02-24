@@ -1,5 +1,6 @@
 # Navigation
 nav.projects: Projects
+nav.boards: Boards
 nav.labels: Labels
 nav.columns: Columns
 nav.users: Users
@@ -57,6 +58,7 @@ label.confirm_delete: Are you sure you want to delete this label?
 column.title: Columns
 column.new: New column
 column.edit: Edit column
+column.board: Board
 column.empty: No columns yet.
 column.flash.created: Column created successfully.
 column.flash.updated: Column updated successfully.
@@ -115,9 +117,17 @@ comment.placeholder: Write a comment...
 comment.empty: No comments yet.
 
 # Board
-board.title: Board
-board.filter_project: Filter by project
-board.all_projects: All projects
+board.title: Boards
+board.project: Project
+board.new: New board
+board.edit: Edit board
+board.empty: No boards yet.
+board.view: View board
+board.columns_count: Columns
+board.flash.created: Board created successfully.
+board.flash.updated: Board updated successfully.
+board.flash.deleted: Board deleted successfully.
+board.confirm_delete: Are you sure you want to delete this board?
 board.no_cards: No cards in this column.
 
 # Archive
@@ -132,6 +142,7 @@ admin.title: Administration
 admin.dashboard: Dashboard
 admin.audit: Audit
 admin.stats.projects: Projects
+admin.stats.boards: Boards
 admin.stats.columns: Columns
 admin.stats.labels: Labels
 admin.stats.cards: Cards

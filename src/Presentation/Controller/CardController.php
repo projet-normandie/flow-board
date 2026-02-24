@@ -45,7 +45,10 @@ class CardController extends AbstractController
 
             $this->addFlash('success', 'card.flash.created');
 
-            return $this->redirectToRoute('app_board');
+            return $this->redirectToRoute('app_project_board', [
+                'id' => $card->getColumn()->getBoard()->getProject()->getId(),
+                'boardId' => $card->getColumn()->getBoard()->getId(),
+            ]);
         }
 
         return $this->render('@App/cards/new.html.twig', [
@@ -78,7 +81,10 @@ class CardController extends AbstractController
 
             $this->addFlash('success', 'card.flash.updated');
 
-            return $this->redirectToRoute('app_board');
+            return $this->redirectToRoute('app_project_board', [
+                'id' => $card->getColumn()->getBoard()->getProject()->getId(),
+                'boardId' => $card->getColumn()->getBoard()->getId(),
+            ]);
         }
 
         return $this->render('@App/cards/edit.html.twig', [
@@ -95,6 +101,9 @@ class CardController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $token = $request->request->getString('_token');
+        $board = $card->getColumn()->getBoard();
+        $projectId = $board->getProject()->getId();
+        $boardId = $board->getId();
 
         if ($this->isCsrfTokenValid('delete' . $card->getId(), $token)) {
             $entityManager->remove($card);
@@ -103,7 +112,7 @@ class CardController extends AbstractController
             $this->addFlash('success', 'card.flash.deleted');
         }
 
-        return $this->redirectToRoute('app_board');
+        return $this->redirectToRoute('app_project_board', ['id' => $projectId, 'boardId' => $boardId]);
     }
 
     #[Route('/{id}/move', name: 'app_card_move', methods: ['POST'])]

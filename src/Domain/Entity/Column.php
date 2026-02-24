@@ -28,6 +28,10 @@ class Column
     #[ORM\Column]
     private int $position;
 
+    #[ORM\ManyToOne(targetEntity: Board::class, inversedBy: 'columns')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Board $board;
+
     /** @var Collection<int, Card> */
     #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'column')]
     #[ORM\OrderBy(['position' => 'ASC'])]
@@ -63,6 +67,18 @@ class Column
     public function setPosition(int $position): static
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getBoard(): Board
+    {
+        return $this->board;
+    }
+
+    public function setBoard(Board $board): static
+    {
+        $this->board = $board;
 
         return $this;
     }

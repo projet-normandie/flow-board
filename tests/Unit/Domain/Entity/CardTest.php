@@ -8,7 +8,6 @@ use App\Domain\Entity\Card;
 use App\Domain\Entity\Column;
 use App\Domain\Entity\Enum\CardPriority;
 use App\Domain\Entity\Label;
-use App\Domain\Entity\Project;
 use App\Domain\Entity\User;
 use PHPUnit\Framework\TestCase;
 
@@ -86,14 +85,6 @@ final class CardTest extends TestCase
         $column->setName('To Do');
         $this->card->setColumn($column);
         self::assertSame($column, $this->card->getColumn());
-    }
-
-    public function testProject(): void
-    {
-        $project = new Project();
-        $project->setName('API');
-        $this->card->setProject($project);
-        self::assertSame($project, $this->card->getProject());
     }
 
     public function testLabelsCollection(): void
@@ -178,8 +169,6 @@ final class CardTest extends TestCase
         $author->setEmail('author@test.com');
         $column = new Column();
         $column->setName('Backlog');
-        $project = new Project();
-        $project->setName('Test');
 
         $result = $this->card
             ->setTitle('Card')
@@ -189,7 +178,6 @@ final class CardTest extends TestCase
             ->setPriority(CardPriority::LOW)
             ->setAuthor($author)
             ->setColumn($column)
-            ->setProject($project)
             ->setDeletedAt(null);
 
         self::assertSame($this->card, $result);
