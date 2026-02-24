@@ -1,21 +1,17 @@
 <div class="card card-item card-priority-{{ card.priority ? card.priority.value : 'none' }}" data-card-id="{{ card.id }}">
     <div class="card-body p-2">
-        <div class="d-flex justify-content-between align-items-start mb-1">
-            <span class="badge rounded-pill" style="background-color: {{ card.project.color }}; font-size: 0.7em;">
-                {{ card.project.name }}
-            </span>
+        <div class="d-flex justify-content-between align-items-start">
+            <h6 class="card-title mb-1">
+            <a href="#" class="text-decoration-none text-body" onclick="event.preventDefault(); openAjaxModal('{{ path('app_card_show', { id: card.id }) }}')">
+                {{ card.title }}
+            </a>
+            </h6>
             {% if is_granted('CARD_EDIT', card) %}
                 <a href="{{ path('app_card_edit', { id: card.id }) }}" class="btn btn-sm btn-link text-muted p-0" title="{{ 'card.edit'|trans }}">
                     <i class="bi bi-pencil"></i>
                 </a>
             {% endif %}
         </div>
-
-        <h6 class="card-title mb-1">
-            <a href="#" class="text-decoration-none text-body" onclick="event.preventDefault(); openAjaxModal('{{ path('app_card_show', { id: card.id }) }}')">
-                {{ card.title }}
-            </a>
-        </h6>
 
         {% if card.labels|length > 0 %}
             <div class="mb-1">

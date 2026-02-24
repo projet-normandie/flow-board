@@ -47,10 +47,6 @@ class Card
     #[ORM\JoinColumn(nullable: false)]
     private Column $column;
 
-    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'cards')]
-    #[ORM\JoinColumn(nullable: false)]
-    private Project $project;
-
     /** @var Collection<int, Label> */
     #[ORM\ManyToMany(targetEntity: Label::class, inversedBy: 'cards')]
     #[ORM\JoinTable(name: 'card_label')]
@@ -155,18 +151,6 @@ class Card
     public function setColumn(Column $column): static
     {
         $this->column = $column;
-
-        return $this;
-    }
-
-    public function getProject(): Project
-    {
-        return $this->project;
-    }
-
-    public function setProject(Project $project): static
-    {
-        $this->project = $project;
 
         return $this;
     }

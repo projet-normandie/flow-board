@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine\Repository;
 
+use App\Domain\Entity\Board;
 use App\Domain\Entity\Card;
 use App\Domain\Entity\Column;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -30,6 +31,26 @@ class CardRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
 
         return ((int) $result) + 1000;
+    }
+
+    /**
+     * @return Card[]
+     */
+    public function findByBoard(Board $board): array
+    {
+        /** @var Card[] $results */
+        $results = $this->createQueryBuilder('c')
+            ->join('c.column', 'col')
+            ->where('col.board = :board')
+            ->setParameter('board', $board)
+            ->leftJoin('c.labels', 'l')->addSelect('l')
+            ->leftJoin('c.assignees', 'u')->addSelect('u')
+            ->orderBy('col.position', 'ASC')
+            ->addOrderBy('c.position', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $results;
     }
 
     /**

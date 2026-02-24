@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Domain\Entity\Board;
 use App\Domain\Entity\Card;
 use App\Domain\Entity\Column;
 use App\Domain\Entity\Enum\CardPriority;
@@ -55,12 +56,20 @@ class AppFixtures extends Fixture
         $manager->persist($projectFront);
         $manager->persist($projectInfra);
 
+        // --- Boards ---
+        $boardApi = (new Board())->setName('Main Board')->setProject($projectApi);
+        $boardFront = (new Board())->setName('Main Board')->setProject($projectFront);
+        $boardInfra = (new Board())->setName('Main Board')->setProject($projectInfra);
+        $manager->persist($boardApi);
+        $manager->persist($boardFront);
+        $manager->persist($boardInfra);
+
         // --- Columns ---
-        $colBacklog = (new Column())->setName('Backlog')->setPosition(1000);
-        $colTodo = (new Column())->setName('To Do')->setPosition(2000);
-        $colInProgress = (new Column())->setName('In Progress')->setPosition(3000);
-        $colReview = (new Column())->setName('Review')->setPosition(4000);
-        $colDone = (new Column())->setName('Done')->setPosition(5000);
+        $colBacklog = (new Column())->setName('Backlog')->setPosition(1000)->setBoard($boardApi);
+        $colTodo = (new Column())->setName('To Do')->setPosition(2000)->setBoard($boardApi);
+        $colInProgress = (new Column())->setName('In Progress')->setPosition(3000)->setBoard($boardApi);
+        $colReview = (new Column())->setName('Review')->setPosition(4000)->setBoard($boardApi);
+        $colDone = (new Column())->setName('Done')->setPosition(5000)->setBoard($boardApi);
         $manager->persist($colBacklog);
         $manager->persist($colTodo);
         $manager->persist($colInProgress);
@@ -87,7 +96,6 @@ class AppFixtures extends Fixture
             ->setPriority(CardPriority::HIGH)
             ->setAuthor($admin)
             ->setColumn($colTodo)
-            ->setProject($projectApi)
             ->addLabel($labelFeature)
             ->addAssignee($alice);
         $manager->persist($card1);
@@ -99,7 +107,6 @@ class AppFixtures extends Fixture
             ->setPriority(CardPriority::CRITICAL)
             ->setAuthor($alice)
             ->setColumn($colInProgress)
-            ->setProject($projectApi)
             ->addLabel($labelBug)
             ->addLabel($labelHotfix)
             ->addAssignee($alice)
@@ -113,7 +120,6 @@ class AppFixtures extends Fixture
             ->setPriority(CardPriority::MEDIUM)
             ->setAuthor($admin)
             ->setColumn($colReview)
-            ->setProject($projectFront)
             ->addLabel($labelFeature)
             ->addAssignee($alice);
         $manager->persist($card3);
@@ -124,7 +130,6 @@ class AppFixtures extends Fixture
             ->setPriority(CardPriority::HIGH)
             ->setAuthor($charlie)
             ->setColumn($colBacklog)
-            ->setProject($projectInfra)
             ->addLabel($labelFeature)
             ->addAssignee($charlie);
         $manager->persist($card4);
@@ -136,7 +141,6 @@ class AppFixtures extends Fixture
             ->setPriority(CardPriority::LOW)
             ->setAuthor($alice)
             ->setColumn($colTodo)
-            ->setProject($projectApi)
             ->addLabel($labelRefactor);
         $manager->persist($card5);
 
@@ -146,7 +150,6 @@ class AppFixtures extends Fixture
             ->setPosition(2000)
             ->setAuthor($admin)
             ->setColumn($colBacklog)
-            ->setProject($projectApi)
             ->addLabel($labelDocs)
             ->addAssignee($bob);
         $manager->persist($card6);
@@ -159,7 +162,6 @@ class AppFixtures extends Fixture
             ->setDueDate(new \DateTimeImmutable('+7 days'))
             ->setAuthor($admin)
             ->setColumn($colInProgress)
-            ->setProject($projectFront)
             ->addLabel($labelFeature)
             ->addAssignee($alice)
             ->addAssignee($charlie);
@@ -173,7 +175,6 @@ class AppFixtures extends Fixture
             ->setDueDate(new \DateTimeImmutable('+1 day'))
             ->setAuthor($bob)
             ->setColumn($colDone)
-            ->setProject($projectApi)
             ->addLabel($labelBug)
             ->addAssignee($bob);
         $manager->persist($card8);
@@ -184,7 +185,6 @@ class AppFixtures extends Fixture
             ->setPriority(CardPriority::MEDIUM)
             ->setAuthor($charlie)
             ->setColumn($colBacklog)
-            ->setProject($projectInfra)
             ->addAssignee($charlie);
         $manager->persist($card9);
 
@@ -196,7 +196,6 @@ class AppFixtures extends Fixture
             ->setDueDate(new \DateTimeImmutable('+14 days'))
             ->setAuthor($admin)
             ->setColumn($colTodo)
-            ->setProject($projectFront)
             ->addLabel($labelFeature)
             ->addAssignee($alice)
             ->addAssignee($bob);
