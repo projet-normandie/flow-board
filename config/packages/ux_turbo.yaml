@@ -1,4 +1,4 @@
-# Enable stateless CSRF protection for forms and logins/logouts
+# Turbo handles CSRF via form hidden fields, no header check needed
 framework:
     csrf_protection:
-        check_header: true
+        check_header: false
