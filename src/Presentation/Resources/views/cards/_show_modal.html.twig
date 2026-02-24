@@ -1,8 +1,8 @@
 <div class="ajax-modal-header">
     <div class="d-flex align-items-center gap-2">
         <span class="badge bg-secondary">{{ card.column.name }}</span>
-        <span class="badge rounded-pill" style="background-color: {{ card.project.color }};">
-            {{ card.project.name }}
+        <span class="badge rounded-pill" style="background-color: {{ card.column.board.project.color }};">
+            {{ card.column.board.project.name }}
         </span>
     </div>
     <button type="button" class="ajax-modal-close" onclick="closeAjaxModal()">&times;</button>

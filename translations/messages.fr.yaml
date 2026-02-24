@@ -1,5 +1,6 @@
 # Navigation
 nav.projects: Projets
+nav.boards: Tableaux
 nav.labels: Labels
 nav.columns: Colonnes
 nav.users: Utilisateurs
@@ -57,6 +58,7 @@ label.confirm_delete: Êtes-vous sûr de vouloir supprimer ce label ?
 column.title: Colonnes
 column.new: Nouvelle colonne
 column.edit: Modifier la colonne
+column.board: Tableau
 column.empty: Aucune colonne pour le moment.
 column.flash.created: Colonne créée avec succès.
 column.flash.updated: Colonne modifiée avec succès.
@@ -115,9 +117,17 @@ comment.placeholder: Écrivez un commentaire...
 comment.empty: Aucun commentaire pour le moment.
 
 # Board
-board.title: Tableau
-board.filter_project: Filtrer par projet
-board.all_projects: Tous les projets
+board.title: Tableaux
+board.project: Projet
+board.new: Nouveau tableau
+board.edit: Modifier le tableau
+board.empty: Aucun tableau pour le moment.
+board.view: Voir le tableau
+board.columns_count: Colonnes
+board.flash.created: Tableau créé avec succès.
+board.flash.updated: Tableau modifié avec succès.
+board.flash.deleted: Tableau supprimé avec succès.
+board.confirm_delete: Êtes-vous sûr de vouloir supprimer ce tableau ?
 board.no_cards: Aucune carte dans cette colonne.
 
 # Archive
@@ -132,6 +142,7 @@ admin.title: Administration
 admin.dashboard: Tableau de bord
 admin.audit: Audit
 admin.stats.projects: Projets
+admin.stats.boards: Tableaux
 admin.stats.columns: Colonnes
 admin.stats.labels: Labels
 admin.stats.cards: Cartes

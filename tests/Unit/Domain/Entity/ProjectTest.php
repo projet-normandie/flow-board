@@ -33,11 +33,6 @@ final class ProjectTest extends TestCase
         self::assertSame('#3b82f6', $this->project->getColor());
     }
 
-    public function testCardsCollectionIsEmptyByDefault(): void
-    {
-        self::assertCount(0, $this->project->getCards());
-    }
-
     public function testFluentSetters(): void
     {
         $result = $this->project

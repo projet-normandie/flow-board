@@ -5,33 +5,28 @@ declare(strict_types=1);
 namespace App\Presentation\Form;
 
 use App\Domain\Entity\Board;
-use App\Domain\Entity\Column;
+use App\Domain\Entity\Project;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<Column>
+ * @extends AbstractType<Board>
  */
-class ColumnFormType extends AbstractType
+class BoardFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('board', EntityType::class, [
-                'class' => Board::class,
-                'label' => 'column.board',
-                'required' => true,
-            ])
             ->add('name', TextType::class, [
                 'label' => 'common.name',
                 'required' => true,
             ])
-            ->add('position', IntegerType::class, [
-                'label' => 'common.position',
+            ->add('project', EntityType::class, [
+                'class' => Project::class,
+                'label' => 'board.project',
                 'required' => true,
             ]);
     }
@@ -39,7 +34,7 @@ class ColumnFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Column::class,
+            'data_class' => Board::class,
         ]);
     }
 }

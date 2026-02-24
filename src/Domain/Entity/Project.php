@@ -27,13 +27,13 @@ class Project
     #[ORM\Column(length: 7)]
     private string $color;
 
-    /** @var Collection<int, Card> */
-    #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'project')]
-    private Collection $cards;
+    /** @var Collection<int, Board> */
+    #[ORM\OneToMany(targetEntity: Board::class, mappedBy: 'project')]
+    private Collection $boards;
 
     public function __construct()
     {
-        $this->cards = new ArrayCollection();
+        $this->boards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,11 +66,28 @@ class Project
     }
 
     /**
-     * @return Collection<int, Card>
+     * @return Collection<int, Board>
      */
-    public function getCards(): Collection
+    public function getBoards(): Collection
     {
-        return $this->cards;
+        return $this->boards;
+    }
+
+    public function addBoard(Board $board): static
+    {
+        if (!$this->boards->contains($board)) {
+            $this->boards->add($board);
+            $board->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBoard(Board $board): static
+    {
+        $this->boards->removeElement($board);
+
+        return $this;
     }
 
     public function __toString(): string

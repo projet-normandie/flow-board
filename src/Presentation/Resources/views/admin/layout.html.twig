@@ -20,6 +20,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link{{ app.request.pathInfo starts with '/admin/boards' ? ' active' : '' }}" href="{{ path('admin_board_index') }}">
+                            <i class="bi bi-kanban me-2"></i>{{ 'nav.boards'|trans }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link{{ app.request.pathInfo starts with '/admin/labels' ? ' active' : '' }}" href="{{ path('admin_label_index') }}">
                             <i class="bi bi-tags me-2"></i>{{ 'nav.labels'|trans }}
                         </a>

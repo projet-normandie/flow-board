@@ -17,7 +17,7 @@
         {% if app.user %}
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{{ path('app_board') }}">
+                <a class="navbar-brand" href="{{ path('app_home') }}">
                     <i class="bi bi-kanban me-1"></i>FlowBoard
                 </a>
 
@@ -31,8 +31,8 @@
                     <ul class="navbar-nav me-auto">
                         {% block navbar_items %}
                             <li class="nav-item">
-                                <a class="nav-link{{ app.request.pathInfo starts with '/board' ? ' active' : '' }}" href="{{ path('app_board') }}">
-                                    <i class="bi bi-kanban me-1"></i>{{ 'nav.board'|trans }}
+                                <a class="nav-link{{ app.request.pathInfo == '/' or app.request.pathInfo starts with '/board' or app.request.pathInfo starts with '/project' ? ' active' : '' }}" href="{{ path('app_home') }}">
+                                    <i class="bi bi-folder me-1"></i>{{ 'nav.projects'|trans }}
                                 </a>
                             </li>
                             {% if is_granted('ROLE_ADMIN') %}
