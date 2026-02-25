@@ -28,7 +28,7 @@
                     </option>
                 {% endfor %}
             </select>
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('app_card_new') }}" class="btn btn-sm btn-primary">
                     <i class="bi bi-plus-lg me-1"></i>{{ 'card.new'|trans }}
                 </a>
