@@ -175,10 +175,12 @@ Disabled users (`enabled = false`) are blocked at login by Symfony Security.
 
 ### V1
 
-- [ ] Comments on cards
+- [x] Comments on cards
 - [x] Board filtering by priority (button toggle per level)
 - [x] Board filtering by label (Tom Select multi-select)
 - [x] Board filtering "My cards" (assigned to current user)
+- [x] Comments on cards
+- [x] Gravatar avatars (email-based, with mystery person fallback)
 
 ### V2
 

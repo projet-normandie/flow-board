@@ -182,12 +182,8 @@ body {
     height: 26px;
     border-radius: 50%;
     background-color: #6c757d;
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    object-fit: cover;
+    display: block;
     margin-right: -6px;
     border: 2px solid #fff;
 }

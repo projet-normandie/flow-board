@@ -27,9 +27,7 @@
             <div class="d-flex align-items-center gap-2">
                 <div class="avatar-group">
                     {% for assignee in card.assignees %}
-                        <span class="avatar-circle" title="{{ assignee.fullName }}">
-                            {{ assignee.fullName|first|upper }}
-                        </span>
+                        <img class="avatar-circle" src="{{ assignee.email|gravatar }}" alt="{{ assignee.fullName }}" title="{{ assignee.fullName }}">
                     {% endfor %}
                 </div>
                 {% if card.priority %}
