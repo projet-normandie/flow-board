@@ -68,13 +68,13 @@ class CardController extends AbstractController
         CardRepository $cardRepository,
     ): Response {
         $card = new Card();
+        $card->setColumn($column);
         $form = $this->createForm(CardFormType::class, $card, ['quick_mode' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $this->getUser();
-            $card->setColumn($column);
             $card->setAuthor($user);
             $card->setPosition($cardRepository->getNextPositionInColumn($column));
 

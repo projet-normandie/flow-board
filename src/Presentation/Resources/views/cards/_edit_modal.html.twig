@@ -38,7 +38,7 @@
         </div>
     {{ form_end(form) }}
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_USER') %}
         <hr class="my-3">
         <form method="post" action="{{ path('app_card_delete', { id: card.id }) }}" data-ajax-form data-confirm="{{ 'card.confirm_delete'|trans }}">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ card.id) }}">

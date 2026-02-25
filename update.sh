@@ -2,7 +2,8 @@
 set -e
 
 echo "==> Pulling latest changes..."
-git pull
+git fetch --all
+git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
 
 echo "==> Installing PHP dependencies..."
 composer install --no-dev --optimize-autoloader
