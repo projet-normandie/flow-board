@@ -94,6 +94,7 @@ card.due_date: Due date
 card.labels: Labels
 card.assignees: Assignees
 card.new: New card
+card.add: Add a card
 card.edit: Edit card
 card.delete: Delete
 card.empty: No cards yet.
@@ -129,6 +130,7 @@ board.flash.updated: Board updated successfully.
 board.flash.deleted: Board deleted successfully.
 board.confirm_delete: Are you sure you want to delete this board?
 board.no_cards: No cards in this column.
+board.filter.all: All
 
 # Archive
 archive.title: Archive

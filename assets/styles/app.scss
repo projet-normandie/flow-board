@@ -73,6 +73,14 @@ body {
         border-bottom-color: rgba(255, 255, 255, 0.1);
     }
 
+    .board-column-footer {
+        border-top-color: rgba(255, 255, 255, 0.1);
+
+        .btn-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+
     .card-item {
         background-color: var(--bs-tertiary-bg);
     }
@@ -111,6 +119,21 @@ body {
     overflow-y: auto;
     flex: 1;
     min-height: 60px;
+}
+
+.board-column-footer {
+    padding: 0.25rem 0.5rem;
+    border-top: 1px solid #ddd;
+
+    .btn-link {
+        text-decoration: none;
+        font-size: 0.85rem;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 0.25rem;
+        }
+    }
 }
 
 // Card items
@@ -205,6 +228,52 @@ body {
 .card-priority-badge-critical {
     background-color: #ef4444;
     color: #fff;
+}
+
+// Priority filter buttons
+.card-priority-filter {
+    border: 1px solid;
+    color: inherit;
+
+    &.card-priority-filter-low {
+        border-color: #6b7280;
+        color: #6b7280;
+
+        &.active {
+            background-color: #6b7280;
+            color: #fff;
+        }
+    }
+
+    &.card-priority-filter-medium {
+        border-color: #3b82f6;
+        color: #3b82f6;
+
+        &.active {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+    }
+
+    &.card-priority-filter-high {
+        border-color: #f97316;
+        color: #f97316;
+
+        &.active {
+            background-color: #f97316;
+            color: #fff;
+        }
+    }
+
+    &.card-priority-filter-critical {
+        border-color: #ef4444;
+        color: #ef4444;
+
+        &.active {
+            background-color: #ef4444;
+            color: #fff;
+        }
+    }
 }
 
 // Admin Sidebar

@@ -7,6 +7,7 @@ namespace App\Infrastructure\Doctrine\Repository;
 use App\Domain\Entity\Board;
 use App\Domain\Entity\Card;
 use App\Domain\Entity\Column;
+use App\Domain\Entity\Enum\CardPriority;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -36,19 +37,24 @@ class CardRepository extends ServiceEntityRepository
     /**
      * @return Card[]
      */
-    public function findByBoard(Board $board): array
+    public function findByBoard(Board $board, ?CardPriority $priority = null): array
     {
-        /** @var Card[] $results */
-        $results = $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('c')
             ->join('c.column', 'col')
             ->where('col.board = :board')
             ->setParameter('board', $board)
             ->leftJoin('c.labels', 'l')->addSelect('l')
             ->leftJoin('c.assignees', 'u')->addSelect('u')
             ->orderBy('col.position', 'ASC')
-            ->addOrderBy('c.position', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->addOrderBy('c.position', 'ASC');
+
+        if ($priority !== null) {
+            $qb->andWhere('c.priority = :priority')
+                ->setParameter('priority', $priority);
+        }
+
+        /** @var Card[] $results */
+        $results = $qb->getQuery()->getResult();
 
         return $results;
     }

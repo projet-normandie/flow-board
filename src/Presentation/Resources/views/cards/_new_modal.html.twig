@@ -1,0 +1,20 @@
+<div class="ajax-modal-header">
+    <div class="d-flex align-items-center gap-2">
+        <h5 class="ajax-modal-title mb-0">{{ 'card.add'|trans }}</h5>
+        <span class="badge bg-secondary">{{ column.name }}</span>
+    </div>
+    <button type="button" class="ajax-modal-close" onclick="closeAjaxModal()">&times;</button>
+</div>
+<div class="ajax-modal-body">
+    {{ form_start(form, { action: path('app_column_card_new', { id: column.id }), attr: { 'data-ajax-form': '' } }) }}
+        {{ form_row(form.title) }}
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <button type="button" class="btn btn-sm btn-secondary" onclick="closeAjaxModal()">
+                {{ 'common.cancel'|trans }}
+            </button>
+            <button type="submit" class="btn btn-sm btn-primary">
+                {{ 'common.create'|trans }}
+            </button>
+        </div>
+    {{ form_end(form) }}
+</div>

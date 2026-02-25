@@ -11,6 +11,13 @@
                     {% include '@App/board/_card.html.twig' %}
                 {% endfor %}
             </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="board-column-footer">
+                    <button type="button" class="btn btn-sm btn-link text-muted w-100" onclick="openAjaxModal('{{ path('app_column_card_new', { id: column.id }) }}')">
+                        <i class="bi bi-plus-lg me-1"></i>{{ 'card.add'|trans }}
+                    </button>
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
 </div>

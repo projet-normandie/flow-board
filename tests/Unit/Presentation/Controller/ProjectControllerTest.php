@@ -14,6 +14,7 @@ use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -129,7 +130,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->twig->method('render')->willReturn('<html>board</html>');
 
-        $response = $this->controller->board($project, 5, $boardRepository, $cardRepository);
+        $response = $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
         self::assertSame('<html>board</html>', $response->getContent());
@@ -147,7 +148,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board($project, 999, $boardRepository, $cardRepository);
+        $this->controller->board(new Request(), $project, 999, $boardRepository, $cardRepository);
     }
 
     public function testBoardThrowsNotFoundWhenBoardBelongsToDifferentProject(): void
@@ -169,7 +170,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board($project, 5, $boardRepository, $cardRepository);
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository);
     }
 
     public function testBoardGroupsCardsByColumn(): void
@@ -219,7 +220,7 @@ final class ProjectControllerTest extends TestCase
         );
         $this->controller->setContainer($container);
 
-        $this->controller->board($project, 5, $boardRepository, $cardRepository);
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository);
     }
 
     private function setEntityId(object $entity, int $id): void
