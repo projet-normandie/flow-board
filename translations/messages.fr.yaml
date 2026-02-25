@@ -116,6 +116,9 @@ card.priority.critical: Critique
 comment.title: Commentaires et activité
 comment.placeholder: Écrivez un commentaire...
 comment.empty: Aucun commentaire pour le moment.
+comment.submit: Envoyer
+comment.delete: Supprimer
+comment.confirm_delete: Supprimer ce commentaire ?
 
 # Board
 board.title: Tableaux

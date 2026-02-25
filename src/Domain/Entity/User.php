@@ -52,10 +52,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Card::class, mappedBy: 'assignees')]
     private Collection $cards;
 
+    /** @var Collection<int, Comment> */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->authoredCards = new ArrayCollection();
         $this->cards = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -166,6 +171,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCards(): Collection
     {
         return $this->cards;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
     }
 
     public function eraseCredentials(): void

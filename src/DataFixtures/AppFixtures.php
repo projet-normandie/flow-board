@@ -7,6 +7,7 @@ namespace App\DataFixtures;
 use App\Domain\Entity\Board;
 use App\Domain\Entity\Card;
 use App\Domain\Entity\Column;
+use App\Domain\Entity\Comment;
 use App\Domain\Entity\Enum\CardPriority;
 use App\Domain\Entity\Enum\JobTitle;
 use App\Domain\Entity\Label;
@@ -200,6 +201,37 @@ class AppFixtures extends Fixture
             ->addAssignee($alice)
             ->addAssignee($bob);
         $manager->persist($card10);
+
+        // --- Comments ---
+        $comment1 = (new Comment())
+            ->setContent('I started working on the login form, should be ready by tomorrow.')
+            ->setAuthor($alice)
+            ->setCard($card1);
+        $manager->persist($comment1);
+
+        $comment2 = (new Comment())
+            ->setContent('Don\'t forget to add CSRF protection on the login endpoint.')
+            ->setAuthor($admin)
+            ->setCard($card1);
+        $manager->persist($comment2);
+
+        $comment3 = (new Comment())
+            ->setContent('The issue only happens with preflight requests from localhost:3000.')
+            ->setAuthor($alice)
+            ->setCard($card2);
+        $manager->persist($comment3);
+
+        $comment4 = (new Comment())
+            ->setContent('I added Access-Control-Allow-Origin, but we still need to handle credentials.')
+            ->setAuthor($bob)
+            ->setCard($card2);
+        $manager->persist($comment4);
+
+        $comment5 = (new Comment())
+            ->setContent('SortableJS is integrated. Testing cross-column drag now.')
+            ->setAuthor($charlie)
+            ->setCard($card7);
+        $manager->persist($comment5);
 
         $manager->flush();
     }

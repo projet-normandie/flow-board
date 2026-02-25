@@ -116,6 +116,9 @@ card.priority.critical: Critical
 comment.title: Comments and activity
 comment.placeholder: Write a comment...
 comment.empty: No comments yet.
+comment.submit: Submit
+comment.delete: Delete
+comment.confirm_delete: Delete this comment?
 
 # Board
 board.title: Boards

@@ -59,6 +59,10 @@ class Card
     #[ORM\JoinTable(name: 'card_user')]
     private Collection $assignees;
 
+    /** @var Collection<int, Comment> */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'card', orphanRemoval: true)]
+    private Collection $comments;
+
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
@@ -66,6 +70,7 @@ class Card
     {
         $this->labels = new ArrayCollection();
         $this->assignees = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -203,6 +208,14 @@ class Card
         $this->assignees->removeElement($user);
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
     }
 
     public function getDeletedAt(): ?\DateTimeImmutable
