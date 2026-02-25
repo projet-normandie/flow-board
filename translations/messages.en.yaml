@@ -155,6 +155,20 @@ theme.toggle: Toggle theme
 nav.board: Board
 nav.archive: Archive
 
+# Profile
+nav.profile: Profile
+profile.title: My profile
+profile.tab.info: Information
+profile.tab.password: Password
+profile.full_name: Full name
+profile.email: Email
+profile.current_password: Current password
+profile.new_password: New password
+profile.confirm_password: Confirm password
+profile.flash.info_updated: Information updated successfully.
+profile.flash.password_updated: Password changed successfully.
+profile.flash.wrong_password: The current password is incorrect.
+
 # Locale switcher
 locale.en: English
 locale.fr: Français

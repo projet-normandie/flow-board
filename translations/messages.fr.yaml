@@ -155,6 +155,20 @@ theme.toggle: Changer le thème
 nav.board: Tableau
 nav.archive: Archive
 
+# Profile
+nav.profile: Profil
+profile.title: Mon profil
+profile.tab.info: Informations
+profile.tab.password: Mot de passe
+profile.full_name: Nom complet
+profile.email: Email
+profile.current_password: Mot de passe actuel
+profile.new_password: Nouveau mot de passe
+profile.confirm_password: Confirmer le mot de passe
+profile.flash.info_updated: Informations mises à jour avec succès.
+profile.flash.password_updated: Mot de passe modifié avec succès.
+profile.flash.wrong_password: Le mot de passe actuel est incorrect.
+
 # Locale switcher
 locale.en: English
 locale.fr: Français
