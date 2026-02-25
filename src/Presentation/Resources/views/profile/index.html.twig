@@ -1,0 +1,68 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}{{ 'profile.title'|trans }} — FlowBoard{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <h1 class="mb-4">{{ 'profile.title'|trans }}</h1>
+
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                    {{ message|trans }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'common.close'|trans }}"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link{{ activeTab == 'info' ? ' active' : '' }}" id="info-tab"
+                        data-bs-toggle="tab" data-bs-target="#info" type="button"
+                        role="tab" aria-controls="info" aria-selected="{{ activeTab == 'info' ? 'true' : 'false' }}">
+                    <i class="bi bi-person me-1"></i>{{ 'profile.tab.info'|trans }}
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link{{ activeTab == 'password' ? ' active' : '' }}" id="password-tab"
+                        data-bs-toggle="tab" data-bs-target="#password" type="button"
+                        role="tab" aria-controls="password" aria-selected="{{ activeTab == 'password' ? 'true' : 'false' }}">
+                    <i class="bi bi-lock me-1"></i>{{ 'profile.tab.password'|trans }}
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3">
+            <div class="tab-pane fade{{ activeTab == 'info' ? ' show active' : '' }}" id="info"
+                 role="tabpanel" aria-labelledby="info-tab">
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(infoForm) }}
+                            {{ form_row(infoForm.fullName) }}
+                            {{ form_row(infoForm.email) }}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>{{ 'common.save'|trans }}
+                            </button>
+                        {{ form_end(infoForm) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade{{ activeTab == 'password' ? ' show active' : '' }}" id="password"
+                 role="tabpanel" aria-labelledby="password-tab">
+                <div class="card">
+                    <div class="card-body">
+                        {{ form_start(passwordForm) }}
+                            {{ form_row(passwordForm.currentPassword) }}
+                            {{ form_row(passwordForm.plainPassword.first) }}
+                            {{ form_row(passwordForm.plainPassword.second) }}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>{{ 'common.save'|trans }}
+                            </button>
+                        {{ form_end(passwordForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
