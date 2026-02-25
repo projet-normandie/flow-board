@@ -94,6 +94,7 @@ card.due_date: Date d'échéance
 card.labels: Labels
 card.assignees: Assignés
 card.new: Nouvelle carte
+card.add: Ajouter une carte
 card.edit: Modifier la carte
 card.delete: Supprimer
 card.empty: Aucune carte pour le moment.
@@ -129,6 +130,7 @@ board.flash.updated: Tableau modifié avec succès.
 board.flash.deleted: Tableau supprimé avec succès.
 board.confirm_delete: Êtes-vous sûr de vouloir supprimer ce tableau ?
 board.no_cards: Aucune carte dans cette colonne.
+board.filter.all: Toutes
 
 # Archive
 archive.title: Archive

@@ -29,7 +29,13 @@ class CardFormType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'card.title_field',
                 'required' => true,
-            ])
+            ]);
+
+        if ($options['quick_mode']) {
+            return;
+        }
+
+        $builder
             ->add('description', TextareaType::class, [
                 'label' => 'card.description',
                 'required' => false,
@@ -37,13 +43,18 @@ class CardFormType extends AbstractType
                     'data-controller' => 'quill',
                     'data-quill-toolbar-value' => 'full',
                 ],
-            ])
-            ->add('column', EntityType::class, [
+            ]);
+
+        if (!$options['edit_mode']) {
+            $builder->add('column', EntityType::class, [
                 'class' => Column::class,
                 'label' => 'card.column',
                 'query_builder' => fn ($repository) => $repository->createQueryBuilder('c')
                     ->orderBy('c.position', 'ASC'),
-            ])
+            ]);
+        }
+
+        $builder
             ->add('priority', EnumType::class, [
                 'class' => CardPriority::class,
                 'label' => 'card.priority',
@@ -75,6 +86,8 @@ class CardFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Card::class,
+            'quick_mode' => false,
+            'edit_mode' => false,
         ]);
     }
 }

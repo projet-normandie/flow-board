@@ -60,6 +60,52 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
 // ============================================
 
 /**
+ * Initialize AJAX form handling inside modal content
+ * @param {HTMLElement} modalContent - The modal content container
+ */
+function initializeModalContent(modalContent) {
+    const forms = modalContent.querySelectorAll('form[data-ajax-form]');
+    if (!forms.length) return;
+
+    forms.forEach((form) => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const confirmMessage = form.dataset.confirm;
+            if (confirmMessage && !confirm(confirmMessage)) {
+                return;
+            }
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: new FormData(form),
+                });
+
+                const contentType = response.headers.get('content-type') || '';
+
+                if (contentType.includes('application/json')) {
+                    const data = await response.json();
+                    if (data.success && data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                } else {
+                    const html = await response.text();
+                    modalContent.innerHTML = html;
+                    initializeModalContent(modalContent);
+                }
+            } catch {
+                if (submitBtn) submitBtn.disabled = false;
+            }
+        });
+    });
+}
+
+/**
  * Open the ajax modal and load content from URL
  * @param {string} url - URL to fetch content from
  */
@@ -78,6 +124,7 @@ window.openAjaxModal = async function(url) {
         const response = await fetch(url);
         const html = await response.text();
         modalContent.innerHTML = html;
+        initializeModalContent(modalContent);
     } catch (error) {
         modalContent.innerHTML = '<div class="ajax-modal-header"><h5 class="ajax-modal-title">Error</h5><button type="button" class="ajax-modal-close" onclick="closeAjaxModal()">&times;</button></div><div class="ajax-modal-body text-center text-danger py-4"><i class="bi bi-exclamation-triangle"></i> An error occurred</div>';
     }

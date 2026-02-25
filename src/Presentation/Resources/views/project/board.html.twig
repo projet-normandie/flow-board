@@ -23,11 +23,6 @@
             </h1>
         </div>
         <div class="d-flex align-items-center gap-3">
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_card_new') }}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-plus-lg me-1"></i>{{ 'card.new'|trans }}
-                </a>
-            {% endif %}
         </div>
     </div>
 
@@ -41,6 +36,20 @@
             </li>
         {% endfor %}
     </ul>
+
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <span class="text-muted small me-1"><i class="bi bi-funnel"></i> {{ 'card.priority'|trans }} :</span>
+        <a href="{{ path('app_project_board', { id: project.id, boardId: board.id }) }}"
+           class="btn btn-sm {{ selectedPriority is null ? 'btn-secondary' : 'btn-outline-secondary' }}">
+            {{ 'board.filter.all'|trans }}
+        </a>
+        {% for p in priorities %}
+            <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, priority: p.value }) }}"
+               class="btn btn-sm card-priority-filter card-priority-filter-{{ p.value }}{{ selectedPriority is same as(p) ? ' active' : '' }}">
+                {{ ('card.priority.' ~ p.value)|trans }}
+            </a>
+        {% endfor %}
+    </div>
 
     {% include '@App/board/_content.html.twig' %}
 </div>

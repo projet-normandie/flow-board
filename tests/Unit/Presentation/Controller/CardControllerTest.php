@@ -184,46 +184,6 @@ final class CardControllerTest extends TestCase
         self::assertSame('<html>show modal</html>', $response->getContent());
     }
 
-    // -- edit() ---------------------------------------------------------------
-
-    public function testEditRendersFormOnGet(): void
-    {
-        $card = $this->createCardWithColumnBoardProject();
-
-        $form = $this->createStub(FormInterface::class);
-        $form->method('isSubmitted')->willReturn(false);
-        $form->method('createView')->willReturn($this->createStub(FormView::class));
-
-        $this->formFactory->method('create')->willReturn($form);
-        $this->twig->method('render')->willReturn('<html>edit form</html>');
-
-        $entityManager = $this->createStub(EntityManagerInterface::class);
-        $response = $this->controller->edit(new Request(), $card, $entityManager);
-
-        self::assertSame(Response::HTTP_OK, $response->getStatusCode());
-        self::assertSame('<html>edit form</html>', $response->getContent());
-    }
-
-    public function testEditFlushesOnValidSubmit(): void
-    {
-        $card = $this->createCardWithColumnBoardProject();
-
-        $form = $this->createStub(FormInterface::class);
-        $form->method('isSubmitted')->willReturn(true);
-        $form->method('isValid')->willReturn(true);
-
-        $this->formFactory->method('create')->willReturn($form);
-        $this->urlGenerator->method('generate')->willReturn('/project/1/board/2');
-
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->expects(self::never())->method('persist');
-        $entityManager->expects(self::once())->method('flush');
-
-        $response = $this->controller->edit(new Request(), $card, $entityManager);
-
-        self::assertInstanceOf(RedirectResponse::class, $response);
-    }
-
     // -- delete() -------------------------------------------------------------
 
     public function testDeleteRemovesCardWithValidCsrfToken(): void

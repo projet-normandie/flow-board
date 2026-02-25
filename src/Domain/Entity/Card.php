@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -45,7 +46,8 @@ class Card
 
     #[ORM\ManyToOne(targetEntity: Column::class, inversedBy: 'cards')]
     #[ORM\JoinColumn(nullable: false)]
-    private Column $column;
+    #[Assert\NotNull]
+    private ?Column $column = null; // @phpstan-ignore doctrine.associationType
 
     /** @var Collection<int, Label> */
     #[ORM\ManyToMany(targetEntity: Label::class, inversedBy: 'cards')]
@@ -143,12 +145,12 @@ class Card
         return $this;
     }
 
-    public function getColumn(): Column
+    public function getColumn(): ?Column
     {
         return $this->column;
     }
 
-    public function setColumn(Column $column): static
+    public function setColumn(?Column $column): static
     {
         $this->column = $column;
 

@@ -7,9 +7,9 @@
             </a>
             </h6>
             {% if is_granted('CARD_EDIT', card) %}
-                <a href="{{ path('app_card_edit', { id: card.id }) }}" class="btn btn-sm btn-link text-muted p-0" title="{{ 'card.edit'|trans }}">
+                <button type="button" class="btn btn-sm btn-link text-muted p-0" title="{{ 'card.edit'|trans }}" onclick="event.stopPropagation(); openAjaxModal('{{ path('app_card_edit_modal', { id: card.id }) }}')">
                     <i class="bi bi-pencil"></i>
-                </a>
+                </button>
             {% endif %}
         </div>
 
@@ -24,12 +24,19 @@
         {% endif %}
 
         <div class="d-flex justify-content-between align-items-center mt-2">
-            <div class="avatar-group">
-                {% for assignee in card.assignees %}
-                    <span class="avatar-circle" title="{{ assignee.fullName }}">
-                        {{ assignee.fullName|first|upper }}
+            <div class="d-flex align-items-center gap-2">
+                <div class="avatar-group">
+                    {% for assignee in card.assignees %}
+                        <span class="avatar-circle" title="{{ assignee.fullName }}">
+                            {{ assignee.fullName|first|upper }}
+                        </span>
+                    {% endfor %}
+                </div>
+                {% if card.priority %}
+                    <span class="badge card-priority-badge-{{ card.priority.value }}" style="font-size: 0.6em;">
+                        {{ ('card.priority.' ~ card.priority.value)|trans }}
                     </span>
-                {% endfor %}
+                {% endif %}
             </div>
             {% if card.dueDate %}
                 {% set now = "now"|date("U") %}

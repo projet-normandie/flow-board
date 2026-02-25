@@ -78,9 +78,9 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="text-muted mb-0"><i class="bi bi-text-left me-1"></i>{{ 'card.description'|trans }}</h6>
                 {% if is_granted('CARD_EDIT', card) %}
-                    <a href="{{ path('app_card_edit', { id: card.id }) }}" class="btn btn-sm btn-outline-secondary">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="openAjaxModal('{{ path('app_card_edit_modal', { id: card.id }) }}')">
                         {{ 'card.show.edit_btn'|trans }}
-                    </a>
+                    </button>
                 {% endif %}
             </div>
             {% if card.description %}

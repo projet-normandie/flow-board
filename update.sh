@@ -8,13 +8,16 @@ echo "==> Installing PHP dependencies..."
 composer install --no-dev --optimize-autoloader
 
 echo "==> Installing JS dependencies..."
-npm ci
+npm install
 
 echo "==> Building assets..."
 npm run build
 
 echo "==> Running database migrations..."
 php bin/console doctrine:migrations:migrate --no-interaction
+
+echo "==> Updating audit database schema..."
+php bin/console audit:schema:update --force
 
 echo "==> Compiling .env for production..."
 APP_ENV=prod composer dump-env prod

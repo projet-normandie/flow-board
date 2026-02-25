@@ -38,7 +38,10 @@ class CardController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             $card->setAuthor($user);
-            $card->setPosition($cardRepository->getNextPositionInColumn($card->getColumn()));
+
+            /** @var Column $column */
+            $column = $card->getColumn();
+            $card->setPosition($cardRepository->getNextPositionInColumn($column));
 
             $entityManager->persist($card);
             $entityManager->flush();
@@ -46,13 +49,52 @@ class CardController extends AbstractController
             $this->addFlash('success', 'card.flash.created');
 
             return $this->redirectToRoute('app_project_board', [
-                'id' => $card->getColumn()->getBoard()->getProject()->getId(),
-                'boardId' => $card->getColumn()->getBoard()->getId(),
+                'id' => $column->getBoard()->getProject()->getId(),
+                'boardId' => $column->getBoard()->getId(),
             ]);
         }
 
         return $this->render('@App/cards/new.html.twig', [
             'card' => $card,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/column/{id}/new', name: 'app_column_card_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function newInColumn(
+        Column $column,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        CardRepository $cardRepository,
+    ): Response {
+        $card = new Card();
+        $form = $this->createForm(CardFormType::class, $card, ['quick_mode' => true]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $card->setColumn($column);
+            $card->setAuthor($user);
+            $card->setPosition($cardRepository->getNextPositionInColumn($column));
+
+            $entityManager->persist($card);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'card.flash.created');
+
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->generateUrl('app_project_board', [
+                    'id' => $column->getBoard()->getProject()->getId(),
+                    'boardId' => $column->getBoard()->getId(),
+                ]),
+            ]);
+        }
+
+        return $this->render('@App/cards/_new_modal.html.twig', [
+            'column' => $column,
             'form' => $form,
         ]);
     }
@@ -65,15 +107,15 @@ class CardController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_card_edit', methods: ['GET', 'POST'])]
-    public function edit(
+    #[Route('/{id}/edit-modal', name: 'app_card_edit_modal', methods: ['GET', 'POST'])]
+    public function editModal(
         Request $request,
         Card $card,
         EntityManagerInterface $entityManager,
     ): Response {
         $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
 
-        $form = $this->createForm(CardFormType::class, $card);
+        $form = $this->createForm(CardFormType::class, $card, ['edit_mode' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -81,13 +123,19 @@ class CardController extends AbstractController
 
             $this->addFlash('success', 'card.flash.updated');
 
-            return $this->redirectToRoute('app_project_board', [
-                'id' => $card->getColumn()->getBoard()->getProject()->getId(),
-                'boardId' => $card->getColumn()->getBoard()->getId(),
+            /** @var Column $column */
+            $column = $card->getColumn();
+
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->generateUrl('app_project_board', [
+                    'id' => $column->getBoard()->getProject()->getId(),
+                    'boardId' => $column->getBoard()->getId(),
+                ]),
             ]);
         }
 
-        return $this->render('@App/cards/edit.html.twig', [
+        return $this->render('@App/cards/_edit_modal.html.twig', [
             'card' => $card,
             'form' => $form,
         ]);
@@ -101,7 +149,9 @@ class CardController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $token = $request->request->getString('_token');
-        $board = $card->getColumn()->getBoard();
+        /** @var Column $column */
+        $column = $card->getColumn();
+        $board = $column->getBoard();
         $projectId = $board->getProject()->getId();
         $boardId = $board->getId();
 
@@ -112,7 +162,13 @@ class CardController extends AbstractController
             $this->addFlash('success', 'card.flash.deleted');
         }
 
-        return $this->redirectToRoute('app_project_board', ['id' => $projectId, 'boardId' => $boardId]);
+        $redirectUrl = $this->generateUrl('app_project_board', ['id' => $projectId, 'boardId' => $boardId]);
+
+        if ($request->isXmlHttpRequest() || $request->headers->get('X-Requested-With') === 'XMLHttpRequest') {
+            return new JsonResponse(['success' => true, 'redirect' => $redirectUrl]);
+        }
+
+        return $this->redirect($redirectUrl);
     }
 
     #[Route('/{id}/move', name: 'app_card_move', methods: ['POST'])]
