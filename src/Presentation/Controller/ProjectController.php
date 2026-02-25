@@ -6,6 +6,7 @@ namespace App\Presentation\Controller;
 
 use App\Domain\Entity\Enum\CardPriority;
 use App\Domain\Entity\Project;
+use App\Domain\Entity\User;
 use App\Infrastructure\Doctrine\Repository\BoardRepository;
 use App\Infrastructure\Doctrine\Repository\CardRepository;
 use App\Infrastructure\Doctrine\Repository\LabelRepository;
@@ -61,7 +62,12 @@ class ProjectController extends AbstractController
             static fn (int $id): bool => $id > 0,
         ));
 
-        $cards = $cardRepository->findByBoard($board, $priority, $labelIds);
+        $filterMine = $request->query->getBoolean('mine');
+        /** @var User|null $user */
+        $user = $this->getUser();
+        $assigneeId = $filterMine ? $user?->getId() : null;
+
+        $cards = $cardRepository->findByBoard($board, $priority, $labelIds, $assigneeId);
 
         $cardsByColumn = [];
         foreach ($cards as $card) {
@@ -82,6 +88,7 @@ class ProjectController extends AbstractController
             'priorities' => CardPriority::cases(),
             'labels' => $labelRepository->findAll(),
             'selectedLabels' => $labelIds,
+            'filterMine' => $filterMine,
         ]);
     }
 }

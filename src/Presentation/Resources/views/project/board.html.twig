@@ -38,13 +38,28 @@
     </ul>
 
     <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+        <span class="text-muted small me-1"><i class="bi bi-person"></i></span>
+        {% if filterMine %}
+            <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, priority: selectedPriority ? selectedPriority.value : null, 'labels': selectedLabels }) }}"
+               class="btn btn-sm btn-primary">
+                <i class="bi bi-person-fill me-1"></i>{{ 'board.filter.mine'|trans }}
+            </a>
+        {% else %}
+            <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, mine: 1, priority: selectedPriority ? selectedPriority.value : null, 'labels': selectedLabels }) }}"
+               class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-person me-1"></i>{{ 'board.filter.mine'|trans }}
+            </a>
+        {% endif %}
+
+        <span class="border-start mx-1" style="height: 24px;"></span>
+
         <span class="text-muted small me-1"><i class="bi bi-funnel"></i> {{ 'card.priority'|trans }} :</span>
-        <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, 'labels': selectedLabels }) }}"
+        <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, 'labels': selectedLabels, mine: filterMine ? 1 : null }) }}"
            class="btn btn-sm {{ selectedPriority is null ? 'btn-secondary' : 'btn-outline-secondary' }}">
             {{ 'board.filter.all'|trans }}
         </a>
         {% for p in priorities %}
-            <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, priority: p.value, 'labels': selectedLabels }) }}"
+            <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, priority: p.value, 'labels': selectedLabels, mine: filterMine ? 1 : null }) }}"
                class="btn btn-sm card-priority-filter card-priority-filter-{{ p.value }}{{ selectedPriority is same as(p) ? ' active' : '' }}">
                 {{ ('card.priority.' ~ p.value)|trans }}
             </a>
@@ -54,6 +69,9 @@
         <form method="get" action="{{ path('app_project_board', { id: project.id, boardId: board.id }) }}" class="d-inline-block" style="min-width: 200px;">
             {% if selectedPriority is not null %}
                 <input type="hidden" name="priority" value="{{ selectedPriority.value }}">
+            {% endif %}
+            {% if filterMine %}
+                <input type="hidden" name="mine" value="1">
             {% endif %}
             <select name="labels[]" multiple
                     data-controller="tom-select"

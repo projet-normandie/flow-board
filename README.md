@@ -175,13 +175,15 @@ Disabled users (`enabled = false`) are blocked at login by Symfony Security.
 
 ### V1
 
-- [ ] User-Project permissions (project_user table)
 - [ ] Comments on cards
-- [ ] Notifications on card assignment
-- [ ] Board/card filtering by label and priority
+- [x] Board filtering by priority (button toggle per level)
+- [x] Board filtering by label (Tom Select multi-select)
+- [x] Board filtering "My cards" (assigned to current user)
 
 ### V2
 
+- [ ] Notifications on card create / move (Push discord)
+- [ ] User-Project permissions (project_user table)
 - [ ] Activity history on cards
 - [ ] File attachments (VichUploaderBundle)
 - [ ] Full-text search
