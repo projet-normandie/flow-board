@@ -133,13 +133,12 @@ Project 1──N Board 1──N Column 1──N Card N──M Label
 
 ## Security
 
-| Role             | Permissions                                    |
-|------------------|------------------------------------------------|
-| ROLE_USER        | View projects/boards, create/edit own cards    |
-| ROLE_ADMIN       | Full CRUD on projects, boards, columns, labels |
-| ROLE_SUPER_ADMIN | User management                                |
+| Role             | Permissions                                                        |
+|------------------|--------------------------------------------------------------------|
+| ROLE_USER        | View projects/boards, full CRUD on cards, manage own comments      |
+| ROLE_ADMIN       | Admin panel: CRUD on projects, boards, columns, labels + archive   |
+| ROLE_SUPER_ADMIN | User management + audit logs                                       |
 
-A `CardVoter` with `RoleHierarchyInterface` handles card-level access (VIEW, EDIT, DELETE).
 Disabled users (`enabled = false`) are blocked at login by Symfony Security.
 
 ## Key Features
