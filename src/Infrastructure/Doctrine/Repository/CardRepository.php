@@ -35,9 +35,10 @@ class CardRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param int[] $labelIds
      * @return Card[]
      */
-    public function findByBoard(Board $board, ?CardPriority $priority = null): array
+    public function findByBoard(Board $board, ?CardPriority $priority = null, array $labelIds = []): array
     {
         $qb = $this->createQueryBuilder('c')
             ->join('c.column', 'col')
@@ -51,6 +52,11 @@ class CardRepository extends ServiceEntityRepository
         if ($priority !== null) {
             $qb->andWhere('c.priority = :priority')
                 ->setParameter('priority', $priority);
+        }
+
+        if ($labelIds !== []) {
+            $qb->andWhere('l.id IN (:labelIds)')
+                ->setParameter('labelIds', $labelIds);
         }
 
         /** @var Card[] $results */

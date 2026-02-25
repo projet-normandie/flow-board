@@ -9,6 +9,7 @@ use App\Domain\Entity\Column;
 use App\Domain\Entity\Project;
 use App\Infrastructure\Doctrine\Repository\BoardRepository;
 use App\Infrastructure\Doctrine\Repository\CardRepository;
+use App\Infrastructure\Doctrine\Repository\LabelRepository;
 use App\Presentation\Controller\ProjectController;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -130,7 +131,17 @@ final class ProjectControllerTest extends TestCase
 
         $this->twig->method('render')->willReturn('<html>board</html>');
 
-        $response = $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository);
+        $labelRepository = $this->createStub(LabelRepository::class);
+        $labelRepository->method('findAll')->willReturn([]);
+
+        $response = $this->controller->board(
+            new Request(),
+            $project,
+            5,
+            $boardRepository,
+            $cardRepository,
+            $labelRepository,
+        );
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
         self::assertSame('<html>board</html>', $response->getContent());
@@ -145,10 +156,11 @@ final class ProjectControllerTest extends TestCase
         $boardRepository->method('find')->willReturn(null);
 
         $cardRepository = $this->createStub(CardRepository::class);
+        $labelRepository = $this->createStub(LabelRepository::class);
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board(new Request(), $project, 999, $boardRepository, $cardRepository);
+        $this->controller->board(new Request(), $project, 999, $boardRepository, $cardRepository, $labelRepository);
     }
 
     public function testBoardThrowsNotFoundWhenBoardBelongsToDifferentProject(): void
@@ -167,10 +179,11 @@ final class ProjectControllerTest extends TestCase
         $boardRepository->method('find')->willReturn($board);
 
         $cardRepository = $this->createStub(CardRepository::class);
+        $labelRepository = $this->createStub(LabelRepository::class);
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository);
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository);
     }
 
     public function testBoardGroupsCardsByColumn(): void
@@ -220,7 +233,10 @@ final class ProjectControllerTest extends TestCase
         );
         $this->controller->setContainer($container);
 
-        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository);
+        $labelRepository = $this->createStub(LabelRepository::class);
+        $labelRepository->method('findAll')->willReturn([]);
+
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository);
     }
 
     private function setEntityId(object $entity, int $id): void
