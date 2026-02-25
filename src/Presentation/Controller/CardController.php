@@ -25,7 +25,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CardController extends AbstractController
 {
     #[Route('/new', name: 'app_card_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -62,7 +61,6 @@ class CardController extends AbstractController
     }
 
     #[Route('/column/{id}/new', name: 'app_column_card_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function newInColumn(
         Column $column,
         Request $request,
@@ -144,7 +142,6 @@ class CardController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_card_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
     public function delete(
         Request $request,
         Card $card,
