@@ -131,6 +131,7 @@ board.flash.deleted: Board deleted successfully.
 board.confirm_delete: Are you sure you want to delete this board?
 board.no_cards: No cards in this column.
 board.filter.all: All
+board.filter.mine: My cards
 board.filter.labels: Labels
 
 # Archive

@@ -131,6 +131,7 @@ board.flash.deleted: Tableau supprimé avec succès.
 board.confirm_delete: Êtes-vous sûr de vouloir supprimer ce tableau ?
 board.no_cards: Aucune carte dans cette colonne.
 board.filter.all: Toutes
+board.filter.mine: Mes cartes
 board.filter.labels: Labels
 
 # Archive
