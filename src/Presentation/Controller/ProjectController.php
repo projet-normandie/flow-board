@@ -8,6 +8,7 @@ use App\Domain\Entity\Enum\CardPriority;
 use App\Domain\Entity\Project;
 use App\Infrastructure\Doctrine\Repository\BoardRepository;
 use App\Infrastructure\Doctrine\Repository\CardRepository;
+use App\Infrastructure\Doctrine\Repository\LabelRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,6 +43,7 @@ class ProjectController extends AbstractController
         int $boardId,
         BoardRepository $boardRepository,
         CardRepository $cardRepository,
+        LabelRepository $labelRepository,
     ): Response {
         $board = $boardRepository->find($boardId);
 
@@ -51,7 +53,15 @@ class ProjectController extends AbstractController
 
         $priority = CardPriority::tryFrom((string) $request->query->get('priority', ''));
 
-        $cards = $cardRepository->findByBoard($board, $priority);
+        $labelIds = array_values(array_filter(
+            array_map(
+                static fn (string $v): int => (int) $v,
+                array_filter($request->query->all('labels'), 'is_string'),
+            ),
+            static fn (int $id): bool => $id > 0,
+        ));
+
+        $cards = $cardRepository->findByBoard($board, $priority, $labelIds);
 
         $cardsByColumn = [];
         foreach ($cards as $card) {
@@ -70,6 +80,8 @@ class ProjectController extends AbstractController
             'cardsByColumn' => $cardsByColumn,
             'selectedPriority' => $priority,
             'priorities' => CardPriority::cases(),
+            'labels' => $labelRepository->findAll(),
+            'selectedLabels' => $labelIds,
         ]);
     }
 }

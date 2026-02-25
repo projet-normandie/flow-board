@@ -2,6 +2,9 @@
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons";
 
+// Tom Select
+@import "tom-select/dist/css/tom-select.bootstrap5.css";
+
 // Quill Editor
 @import "~quill/dist/quill.snow.css";
 
@@ -416,4 +419,14 @@ body {
     .ajax-modal-dialog {
         max-width: 900px;
     }
+}
+
+// Tom Select label dots
+.ts-label-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
 }

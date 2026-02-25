@@ -37,18 +37,37 @@
         {% endfor %}
     </ul>
 
-    <div class="d-flex align-items-center gap-2 mb-3">
+    <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
         <span class="text-muted small me-1"><i class="bi bi-funnel"></i> {{ 'card.priority'|trans }} :</span>
-        <a href="{{ path('app_project_board', { id: project.id, boardId: board.id }) }}"
+        <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, 'labels': selectedLabels }) }}"
            class="btn btn-sm {{ selectedPriority is null ? 'btn-secondary' : 'btn-outline-secondary' }}">
             {{ 'board.filter.all'|trans }}
         </a>
         {% for p in priorities %}
-            <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, priority: p.value }) }}"
+            <a href="{{ path('app_project_board', { id: project.id, boardId: board.id, priority: p.value, 'labels': selectedLabels }) }}"
                class="btn btn-sm card-priority-filter card-priority-filter-{{ p.value }}{{ selectedPriority is same as(p) ? ' active' : '' }}">
                 {{ ('card.priority.' ~ p.value)|trans }}
             </a>
         {% endfor %}
+
+        <span class="text-muted small ms-3 me-1"><i class="bi bi-tags"></i> {{ 'board.filter.labels'|trans }} :</span>
+        <form method="get" action="{{ path('app_project_board', { id: project.id, boardId: board.id }) }}" class="d-inline-block" style="min-width: 200px;">
+            {% if selectedPriority is not null %}
+                <input type="hidden" name="priority" value="{{ selectedPriority.value }}">
+            {% endif %}
+            <select name="labels[]" multiple
+                    data-controller="tom-select"
+                    data-tom-select-auto-submit-value="true"
+                    placeholder="{{ 'board.filter.labels'|trans }}">
+                {% for label in labels %}
+                    <option value="{{ label.id }}"
+                            data-color="{{ label.color }}"
+                            {{ label.id in selectedLabels ? 'selected' }}>
+                        {{ label.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
     </div>
 
     {% include '@App/board/_content.html.twig' %}
