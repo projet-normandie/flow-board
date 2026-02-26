@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presentation\Controller\Admin;
 
 use App\Domain\Entity\User;
+use App\Infrastructure\Doctrine\Repository\LoginHistoryRepository;
 use App\Infrastructure\Doctrine\Repository\UserRepository;
 use App\Presentation\Form\UserFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -84,6 +85,15 @@ class UserController extends AbstractController
         return $this->render('@App/admin/users/edit.html.twig', [
             'user' => $user,
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}/login-history', name: 'admin_user_login_history', methods: ['GET'])]
+    public function loginHistory(User $user, LoginHistoryRepository $loginHistoryRepository): Response
+    {
+        return $this->render('@App/admin/users/login_history.html.twig', [
+            'user' => $user,
+            'loginHistories' => $loginHistoryRepository->findByUser($user, 50),
         ]);
     }
 

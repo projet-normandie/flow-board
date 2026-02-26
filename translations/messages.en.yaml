@@ -176,6 +176,17 @@ profile.flash.info_updated: Information updated successfully.
 profile.flash.password_updated: Password changed successfully.
 profile.flash.wrong_password: The current password is incorrect.
 
+# Login History
+login_history.title: Login history
+login_history.date: Date
+login_history.ip_address: IP address
+login_history.user_agent: Browser
+login_history.auth_type: Type
+login_history.auth_type.form_login: Form login
+login_history.auth_type.remember_me: Remember me
+login_history.empty: No login history.
+profile.tab.login_history: Login history
+
 # Locale switcher
 locale.en: English
 locale.fr: Français

@@ -56,11 +56,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
     private Collection $comments;
 
+    /** @var Collection<int, LoginHistory> */
+    #[ORM\OneToMany(targetEntity: LoginHistory::class, mappedBy: 'user')]
+    private Collection $loginHistories;
+
     public function __construct()
     {
         $this->authoredCards = new ArrayCollection();
         $this->cards = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->loginHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,6 +184,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    /**
+     * @return Collection<int, LoginHistory>
+     */
+    public function getLoginHistories(): Collection
+    {
+        return $this->loginHistories;
     }
 
     public function eraseCredentials(): void

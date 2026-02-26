@@ -6,7 +6,7 @@ git fetch --all
 git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
 
 echo "==> Installing PHP dependencies..."
-composer install --no-dev --optimize-autoloader
+composer install --no-dev --optimize-autoloader --quiet
 
 echo "==> Installing JS dependencies..."
 npm install
@@ -21,7 +21,7 @@ echo "==> Updating audit database schema..."
 php bin/console audit:schema:update --force
 
 echo "==> Compiling .env for production..."
-APP_ENV=prod composer dump-env prod
+APP_ENV=prod composer dump-env prod --quiet
 
 echo "==> Clearing and warming up cache..."
 php bin/console cache:clear --env=prod

@@ -176,6 +176,17 @@ profile.flash.info_updated: Informations mises à jour avec succès.
 profile.flash.password_updated: Mot de passe modifié avec succès.
 profile.flash.wrong_password: Le mot de passe actuel est incorrect.
 
+# Login History
+login_history.title: Historique des connexions
+login_history.date: Date
+login_history.ip_address: Adresse IP
+login_history.user_agent: Navigateur
+login_history.auth_type: Type
+login_history.auth_type.form_login: Formulaire
+login_history.auth_type.remember_me: Connexion automatique
+login_history.empty: Aucune connexion enregistrée.
+profile.tab.login_history: Connexions
+
 # Locale switcher
 locale.en: English
 locale.fr: Français
