@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Presentation\Controller;
 
+use App\Application\Service\ActivityService;
 use App\Domain\Entity\Project;
 use App\Infrastructure\Doctrine\Repository\ProjectRepository;
 use App\Presentation\Controller\HomeController;
@@ -44,7 +45,10 @@ final class HomeControllerTest extends TestCase
 
         $this->twig->method('render')->willReturn('<html>home</html>');
 
-        $response = $this->controller->index($repository);
+        $activityService = $this->createStub(ActivityService::class);
+        $activityService->method('getRecentActivity')->willReturn([]);
+
+        $response = $this->controller->index($repository, $activityService);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
         self::assertSame('<html>home</html>', $response->getContent());
@@ -57,12 +61,18 @@ final class HomeControllerTest extends TestCase
         $repository = $this->createStub(ProjectRepository::class);
         $repository->method('findAll')->willReturn($projects);
 
+        $activityService = $this->createStub(ActivityService::class);
+        $activityService->method('getRecentActivity')->willReturn([]);
+
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
             ->method('render')
             ->with(
                 '@App/home/index.html.twig',
-                ['projects' => $projects],
+                self::callback(static function (array $params) use ($projects): bool {
+                    return $params['projects'] === $projects
+                        && \array_key_exists('recentActivity', $params);
+                }),
             )
             ->willReturn('<html>home</html>');
 
@@ -75,6 +85,6 @@ final class HomeControllerTest extends TestCase
         );
         $this->controller->setContainer($container);
 
-        $this->controller->index($repository);
+        $this->controller->index($repository, $activityService);
     }
 }

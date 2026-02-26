@@ -11,7 +11,7 @@ use App\Domain\Entity\Project;
 use App\Domain\Entity\User;
 use App\Infrastructure\Doctrine\Repository\CardRepository;
 use App\Infrastructure\Doctrine\Repository\ColumnRepository;
-use App\Infrastructure\Doctrine\Repository\CommentRepository;
+use App\Application\Service\ActivityService;
 use App\Presentation\Controller\CardController;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\Stub;
@@ -179,10 +179,10 @@ final class CardControllerTest extends TestCase
 
         $this->twig->method('render')->willReturn('<html>show modal</html>');
 
-        $commentRepository = $this->createStub(CommentRepository::class);
-        $commentRepository->method('findByCard')->willReturn([]);
+        $activityService = $this->createStub(ActivityService::class);
+        $activityService->method('getCardTimeline')->willReturn([]);
 
-        $response = $this->controller->show($card, $commentRepository);
+        $response = $this->controller->show($card, $activityService);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
         self::assertSame('<html>show modal</html>', $response->getContent());

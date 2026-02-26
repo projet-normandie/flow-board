@@ -187,6 +187,24 @@ login_history.auth_type.remember_me: Connexion automatique
 login_history.empty: Aucune connexion enregistrée.
 profile.tab.login_history: Connexions
 
+# Activity
+activity.title: Activité
+activity.recent: Activité récente
+activity.empty: Aucune activité pour le moment.
+activity.system: Système
+activity.on_card: "sur"
+activity.card.created: a créé cette carte
+activity.card.archived: a archivé cette carte
+activity.card.title_changed: "a renommé cette carte en « %new% »"
+activity.card.description_changed: a modifié la description
+activity.card.priority_changed: "a changé la priorité en %value%"
+activity.card.due_date_changed: "a changé la date d'échéance en %value%"
+activity.card.moved_to_column: "a déplacé cette carte vers %column%"
+activity.card.label_added: "a ajouté le label %label%"
+activity.card.label_removed: "a retiré le label %label%"
+activity.card.assignee_added: "a assigné %user%"
+activity.card.assignee_removed: "a désassigné %user%"
+
 # Locale switcher
 locale.en: English
 locale.fr: Français

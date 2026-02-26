@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presentation\Controller;
 
+use App\Application\Service\ActivityService;
 use App\Infrastructure\Doctrine\Repository\ProjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(ProjectRepository $projectRepository): Response
+    public function index(ProjectRepository $projectRepository, ActivityService $activityService): Response
     {
         return $this->render('@App/home/index.html.twig', [
             'projects' => $projectRepository->findAll(),
+            'recentActivity' => $activityService->getRecentActivity(),
         ]);
     }
 }

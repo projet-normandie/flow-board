@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Presentation\Controller;
 
+use App\Application\Service\ActivityService;
 use App\Domain\Entity\Card;
 use App\Domain\Entity\Comment;
 use App\Domain\Entity\User;
-use App\Infrastructure\Doctrine\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,17 +19,21 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class CommentController extends AbstractController
 {
+    public function __construct(
+        private readonly ActivityService $activityService,
+    ) {
+    }
+
     #[Route('/{id}/create', name: 'app_comment_create', methods: ['POST'])]
     public function create(
         Request $request,
         Card $card,
         EntityManagerInterface $entityManager,
-        CommentRepository $commentRepository,
     ): Response {
         $content = trim($request->request->getString('content'));
 
         if ($content === '') {
-            return $this->renderShowModal($card, $commentRepository);
+            return $this->renderShowModal($card);
         }
 
         /** @var User $user */
@@ -43,7 +47,7 @@ class CommentController extends AbstractController
         $entityManager->persist($comment);
         $entityManager->flush();
 
-        return $this->renderShowModal($card, $commentRepository);
+        return $this->renderShowModal($card);
     }
 
     #[Route('/{id}/delete', name: 'app_comment_delete', methods: ['POST'])]
@@ -51,7 +55,6 @@ class CommentController extends AbstractController
         Request $request,
         Comment $comment,
         EntityManagerInterface $entityManager,
-        CommentRepository $commentRepository,
     ): Response {
         $card = $comment->getCard();
         $token = $request->request->getString('_token');
@@ -66,14 +69,14 @@ class CommentController extends AbstractController
             }
         }
 
-        return $this->renderShowModal($card, $commentRepository);
+        return $this->renderShowModal($card);
     }
 
-    private function renderShowModal(Card $card, CommentRepository $commentRepository): Response
+    private function renderShowModal(Card $card): Response
     {
         return $this->render('@App/cards/_show_modal.html.twig', [
             'card' => $card,
-            'comments' => $commentRepository->findByCard($card),
+            'timeline' => $this->activityService->getCardTimeline($card),
         ]);
     }
 }
