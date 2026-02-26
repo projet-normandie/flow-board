@@ -10,7 +10,7 @@ use App\Domain\Entity\Column;
 use App\Domain\Entity\User;
 use App\Infrastructure\Doctrine\Repository\CardRepository;
 use App\Infrastructure\Doctrine\Repository\ColumnRepository;
-use App\Infrastructure\Doctrine\Repository\CommentRepository;
+use App\Application\Service\ActivityService;
 use App\Presentation\Form\CardFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -99,11 +99,11 @@ class CardController extends AbstractController
     }
 
     #[Route('/{id}/show', name: 'app_card_show', methods: ['GET'])]
-    public function show(Card $card, CommentRepository $commentRepository): Response
+    public function show(Card $card, ActivityService $activityService): Response
     {
         return $this->render('@App/cards/_show_modal.html.twig', [
             'card' => $card,
-            'comments' => $commentRepository->findByCard($card),
+            'timeline' => $activityService->getCardTimeline($card),
         ]);
     }
 

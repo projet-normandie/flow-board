@@ -52,5 +52,49 @@
             {% endfor %}
         </div>
     {% endif %}
+
+    {# Recent activity #}
+    {% if recentActivity|length > 0 %}
+        <div class="mt-5">
+            <h2 class="h4 mb-3">
+                <i class="bi bi-clock-history me-2"></i>{{ 'activity.recent'|trans }}
+            </h2>
+            <div class="list-group">
+                {% for entry in recentActivity %}
+                    <div class="list-group-item">
+                        <div class="d-flex align-items-center gap-2">
+                            {% if entry.item.userEmail %}
+                                <img class="avatar-circle flex-shrink-0" src="{{ entry.item.userEmail|gravatar }}" alt="{{ entry.item.username }}">
+                            {% else %}
+                                <span class="avatar-circle flex-shrink-0 bg-secondary d-inline-flex align-items-center justify-content-center">
+                                    <i class="bi bi-person text-white"></i>
+                                </span>
+                            {% endif %}
+                            <div class="flex-grow-1 min-width-0">
+                                <div class="small">
+                                    <strong>{{ entry.item.username }}</strong>
+                                    {% if entry.item.activityType.value == 'comment' %}
+                                        {{ 'comment.title'|trans|lower }}
+                                    {% else %}
+                                        {{ entry.item.translationKey|trans(entry.item.translationParams ?? {}) }}
+                                    {% endif %}
+                                    {% if entry.card %}
+                                        <span class="text-muted">{{ 'activity.on_card'|trans }}</span>
+                                        <a href="#" onclick="openAjaxModal('{{ path('app_card_show', { id: entry.card.id }) }}'); return false;" class="text-decoration-none fw-semibold">
+                                            {{ entry.card.title }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <small class="text-muted">{{ entry.item.occurredAt|date('d/m/Y H:i') }}</small>
+                            </div>
+                            {% if entry.item.iconClass %}
+                                <i class="bi {{ entry.item.iconClass }} text-muted"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

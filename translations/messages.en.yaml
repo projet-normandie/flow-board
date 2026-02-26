@@ -187,6 +187,24 @@ login_history.auth_type.remember_me: Remember me
 login_history.empty: No login history.
 profile.tab.login_history: Login history
 
+# Activity
+activity.title: Activity
+activity.recent: Recent activity
+activity.empty: No activity yet.
+activity.system: System
+activity.on_card: "on"
+activity.card.created: created this card
+activity.card.archived: archived this card
+activity.card.title_changed: "renamed this card to \"%new%\""
+activity.card.description_changed: updated the description
+activity.card.priority_changed: "changed priority to %value%"
+activity.card.due_date_changed: "changed due date to %value%"
+activity.card.moved_to_column: "moved this card to %column%"
+activity.card.label_added: "added label %label%"
+activity.card.label_removed: "removed label %label%"
+activity.card.assignee_added: "assigned %user%"
+activity.card.assignee_removed: "unassigned %user%"
+
 # Locale switcher
 locale.en: English
 locale.fr: Français
