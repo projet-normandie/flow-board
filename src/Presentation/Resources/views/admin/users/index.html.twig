@@ -46,6 +46,9 @@
                     </td>
                     <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i') : '—' }}</td>
                     <td>
+                        <a href="{{ path('admin_user_login_history', { id: user.id }) }}" class="btn btn-sm btn-outline-secondary" title="{{ 'login_history.title'|trans }}">
+                            <i class="bi bi-clock-history"></i>
+                        </a>
                         <a href="{{ path('admin_user_edit', { id: user.id }) }}" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-pencil"></i>
                         </a>

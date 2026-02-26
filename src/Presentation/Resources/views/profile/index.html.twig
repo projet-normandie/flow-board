@@ -30,6 +30,13 @@
                     <i class="bi bi-lock me-1"></i>{{ 'profile.tab.password'|trans }}
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link{{ activeTab == 'login_history' ? ' active' : '' }}" id="login-history-tab"
+                        data-bs-toggle="tab" data-bs-target="#login-history" type="button"
+                        role="tab" aria-controls="login-history" aria-selected="{{ activeTab == 'login_history' ? 'true' : 'false' }}">
+                    <i class="bi bi-clock-history me-1"></i>{{ 'profile.tab.login_history'|trans }}
+                </button>
+            </li>
         </ul>
 
         <div class="tab-content mt-3">
@@ -60,6 +67,40 @@
                                 <i class="bi bi-check-lg me-1"></i>{{ 'common.save'|trans }}
                             </button>
                         {{ form_end(passwordForm) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade{{ activeTab == 'login_history' ? ' show active' : '' }}" id="login-history"
+                 role="tabpanel" aria-labelledby="login-history-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'login_history.date'|trans }}</th>
+                                    <th>{{ 'login_history.ip_address'|trans }}</th>
+                                    <th>{{ 'login_history.user_agent'|trans }}</th>
+                                    <th>{{ 'login_history.auth_type'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in loginHistories %}
+                                    <tr>
+                                        <td>{{ entry.createdAt|date('Y-m-d H:i') }}</td>
+                                        <td>{{ entry.ipAddress }}</td>
+                                        <td><small>{{ entry.userAgent|u.truncate(80, '...') }}</small></td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ ('login_history.auth_type.' ~ entry.authType.value)|trans }}</span>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-muted text-center">{{ 'login_history.empty'|trans }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

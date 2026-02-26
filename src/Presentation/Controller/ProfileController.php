@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Presentation\Controller;
 
 use App\Domain\Entity\User;
+use App\Infrastructure\Doctrine\Repository\LoginHistoryRepository;
 use App\Presentation\Form\ProfileInfoFormType;
 use App\Presentation\Form\ProfilePasswordFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile', methods: ['GET'])]
-    public function index(): Response
+    public function index(LoginHistoryRepository $loginHistoryRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -35,6 +36,7 @@ class ProfileController extends AbstractController
         return $this->render('@App/profile/index.html.twig', [
             'infoForm' => $infoForm,
             'passwordForm' => $passwordForm,
+            'loginHistories' => $loginHistoryRepository->findByUser($user),
             'activeTab' => 'info',
         ]);
     }
@@ -43,6 +45,7 @@ class ProfileController extends AbstractController
     public function updateInfo(
         Request $request,
         EntityManagerInterface $entityManager,
+        LoginHistoryRepository $loginHistoryRepository,
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
@@ -67,6 +70,7 @@ class ProfileController extends AbstractController
         return $this->render('@App/profile/index.html.twig', [
             'infoForm' => $infoForm,
             'passwordForm' => $passwordForm,
+            'loginHistories' => $loginHistoryRepository->findByUser($user),
             'activeTab' => 'info',
         ]);
     }
@@ -76,6 +80,7 @@ class ProfileController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
+        LoginHistoryRepository $loginHistoryRepository,
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
@@ -113,6 +118,7 @@ class ProfileController extends AbstractController
         return $this->render('@App/profile/index.html.twig', [
             'infoForm' => $infoForm,
             'passwordForm' => $passwordForm,
+            'loginHistories' => $loginHistoryRepository->findByUser($user),
             'activeTab' => 'password',
         ]);
     }
