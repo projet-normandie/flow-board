@@ -1,0 +1,59 @@
+name: Deploy flow-board
+
+on:
+    push:
+        branches: [ dev ]
+    workflow_dispatch:
+        inputs:
+            environment:
+                description: 'Environment'
+                required: true
+                default: 'production'
+                type: choice
+                options:
+                    - staging
+                    - production
+
+jobs:
+    deploy:
+        if: github.repository == 'projet-normandie/flow-board'
+        runs-on: ubuntu-latest
+        environment: ${{ inputs.environment || 'staging' }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.5'
+
+            - name: Install PHP dependencies
+              run: APP_ENV=prod composer install --no-dev --optimize-autoloader
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 'lts/*'
+
+            - name: Build assets
+              run: npm install && npm run build
+
+            - name: Setup SSH
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
+                  chmod 600 ~/.ssh/id_ed25519
+                  ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+              env:
+                  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
+            - name: Deploy
+              run: |
+                  eval $(ssh-agent -a /tmp/ssh_agent.sock)
+                  ssh-add ~/.ssh/id_ed25519
+                  rsync -azv --delete \
+                    -e "ssh -p ${{ secrets.SSH_PORT }}" \
+                    --exclude='.git' \
+                    --exclude='.github' \
+                    --exclude='var/' \
+                    --exclude='.env.local' \
+                    ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
+                  ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.DEPLOY_PATH }} && php bin/console cache:clear && php bin/console doctrine:migrations:migrate --no-interaction"
