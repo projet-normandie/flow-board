@@ -191,58 +191,9 @@ Disabled users (`enabled = false`) are blocked at login by Symfony Security.
 - [ ] CSV/PDF export
 - [ ] REST API
 
-## Production Deployment
+## Deployment
 
-### Prerequisites
-
-- PHP 8.4+ with extensions: ctype, iconv, intl
-- MySQL 8.0+
-- Composer
-- Node.js / npm
-
-### Deploy
-
-```bash
-git clone <repository-url>
-cd flow-board
-
-# Install dependencies (no dev packages)
-composer install --no-dev --optimize-autoloader
-
-# Compile .env files for production
-APP_ENV=prod composer dump-env prod
-
-# Build frontend assets
-npm ci && npm run build
-
-# Run database migrations
-php bin/console doctrine:migrations:migrate --no-interaction
-
-# Create the first admin user
-php bin/console app:create-admin
-
-# Clear and warm up cache
-php bin/console cache:clear --env=prod
-php bin/console cache:warmup --env=prod
-```
-
-### Updating
-
-After the initial deploy, pull updates with:
-
-```bash
-./update.sh
-```
-
-This will pull the latest code, install dependencies, build assets, run migrations and clear the cache.
-
-### Web server
-
-Point your web server's document root to the `public/` directory. See the Symfony documentation for [Apache](https://symfony.com/doc/current/setup/web_server_configuration.html#apache) or [Nginx](https://symfony.com/doc/current/setup/web_server_configuration.html#nginx) configuration.
-
-### File permissions
-
-The `var/` directory must be writable by the web server (cache, logs, sessions).
+Fork this repository and set up your own CI/CD pipeline. The `.drone.yml` file is provided as a reference.
 
 ## License
 
