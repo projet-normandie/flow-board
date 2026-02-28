@@ -161,6 +161,7 @@ theme.toggle: Toggle theme
 # Navigation (extra)
 nav.board: Board
 nav.archive: Archive
+nav.login_history: Login history
 
 # Profile
 nav.profile: Profile
@@ -178,6 +179,7 @@ profile.flash.wrong_password: The current password is incorrect.
 
 # Login History
 login_history.title: Login history
+login_history.all_title: Login history — All users
 login_history.date: Date
 login_history.ip_address: IP address
 login_history.user_agent: Browser

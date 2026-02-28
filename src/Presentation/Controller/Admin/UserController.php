@@ -88,6 +88,14 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/login-history', name: 'admin_user_login_history_all', methods: ['GET'])]
+    public function loginHistoryAll(LoginHistoryRepository $loginHistoryRepository): Response
+    {
+        return $this->render('@App/admin/users/login_history_all.html.twig', [
+            'loginHistories' => $loginHistoryRepository->findLatest(100),
+        ]);
+    }
+
     #[Route('/{id}/login-history', name: 'admin_user_login_history', methods: ['GET'])]
     public function loginHistory(User $user, LoginHistoryRepository $loginHistoryRepository): Response
     {
