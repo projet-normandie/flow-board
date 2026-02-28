@@ -40,6 +40,11 @@
                                 <i class="bi bi-people me-2"></i>{{ 'nav.users'|trans }}
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link{{ app.request.pathInfo == '/admin/users/login-history' ? ' active' : '' }}" href="{{ path('admin_user_login_history_all') }}">
+                                <i class="bi bi-clock-history me-2"></i>{{ 'nav.login_history'|trans }}
+                            </a>
+                        </li>
                     {% endif %}
                     <li class="nav-item">
                         <a class="nav-link{{ app.request.pathInfo starts with '/audit' ? ' active' : '' }}" href="{{ path('dh_auditor_list_audits') }}">
