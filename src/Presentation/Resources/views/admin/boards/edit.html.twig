@@ -1,9 +1,0 @@
-{% extends '@App/admin/layout.html.twig' %}
-
-{% block title %}{{ 'board.edit'|trans }} — FlowBoard{% endblock %}
-
-{% block admin_content %}
-    <h1>{{ 'board.edit'|trans }}</h1>
-
-    {% include '@App/admin/boards/_form.html.twig' with { button_label: 'common.update'|trans } %}
-{% endblock %}

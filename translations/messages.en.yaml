@@ -147,6 +147,7 @@ archive.confirm_restore: Are you sure you want to restore this card?
 # Admin
 admin.title: Administration
 admin.dashboard: Dashboard
+admin.section.content: Content
 admin.audit: Audit
 admin.stats.projects: Projects
 admin.stats.boards: Boards
@@ -162,6 +163,7 @@ theme.toggle: Toggle theme
 nav.board: Board
 nav.archive: Archive
 nav.login_history: Login history
+nav.back_to_site: Back to site
 
 # Profile
 nav.profile: Profile

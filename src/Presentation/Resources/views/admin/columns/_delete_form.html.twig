@@ -1,6 +1,0 @@
-<form method="post" action="{{ path('admin_column_delete', { id: column.id }) }}" class="d-inline" onsubmit="return confirm('{{ 'column.confirm_delete'|trans }}');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ column.id) }}">
-    <button type="submit" class="btn btn-sm btn-outline-danger">
-        <i class="bi bi-trash"></i>
-    </button>
-</form>

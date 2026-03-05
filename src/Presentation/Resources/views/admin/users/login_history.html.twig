@@ -1,11 +1,10 @@
-{% extends '@App/admin/layout.html.twig' %}
+{% extends '@EasyAdmin/layout.html.twig' %}
 
-{% block title %}{{ 'login_history.title'|trans }} — {{ user.fullName }} — FlowBoard{% endblock %}
+{% block content_title %}{{ 'login_history.title'|trans }} — {{ user.fullName }}{% endblock %}
 
-{% block admin_content %}
+{% block main %}
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>{{ 'login_history.title'|trans }} — {{ user.fullName }}</h1>
-        <a href="{{ path('admin_user_index') }}" class="btn btn-outline-secondary">
+        <a href="{{ path('admin_dashboard_user_index') }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i>{{ 'common.cancel'|trans }}
         </a>
     </div>

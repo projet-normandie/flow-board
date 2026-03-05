@@ -1,6 +1,0 @@
-<form method="post" action="{{ path('admin_label_delete', { id: label.id }) }}" class="d-inline" onsubmit="return confirm('{{ 'label.confirm_delete'|trans }}');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ label.id) }}">
-    <button type="submit" class="btn btn-sm btn-outline-danger">
-        <i class="bi bi-trash"></i>
-    </button>
-</form>
