@@ -147,6 +147,7 @@ archive.confirm_restore: Êtes-vous sûr de vouloir restaurer cette carte ?
 # Admin
 admin.title: Administration
 admin.dashboard: Tableau de bord
+admin.section.content: Contenu
 admin.audit: Audit
 admin.stats.projects: Projets
 admin.stats.boards: Tableaux
@@ -162,6 +163,7 @@ theme.toggle: Changer le thème
 nav.board: Tableau
 nav.archive: Archive
 nav.login_history: Historique connexions
+nav.back_to_site: Retour au site
 
 # Profile
 nav.profile: Profil
