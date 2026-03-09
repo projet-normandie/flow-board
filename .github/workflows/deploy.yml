@@ -1,4 +1,4 @@
-name: Deploy flow-board
+name: Deploy
 
 on:
     push:

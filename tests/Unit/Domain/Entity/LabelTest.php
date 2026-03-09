@@ -38,6 +38,12 @@ final class LabelTest extends TestCase
         self::assertCount(0, $this->label->getCards());
     }
 
+    public function testToString(): void
+    {
+        $this->label->setName('Feature');
+        self::assertSame('Feature', (string) $this->label);
+    }
+
     public function testFluentSetters(): void
     {
         $result = $this->label

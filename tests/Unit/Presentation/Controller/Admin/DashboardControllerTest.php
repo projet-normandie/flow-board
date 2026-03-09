@@ -28,7 +28,14 @@ final class DashboardControllerTest extends TestCase
     {
         $this->twig = $this->createStub(Environment::class);
 
-        $this->controller = new DashboardController();
+        $this->controller = new DashboardController(
+            $this->createRepositoryStub(ProjectRepository::class, 3),
+            $this->createRepositoryStub(BoardRepository::class, 2),
+            $this->createRepositoryStub(ColumnRepository::class, 8),
+            $this->createRepositoryStub(LabelRepository::class, 5),
+            $this->createRepositoryStub(CardRepository::class, 12),
+            $this->createRepositoryStub(UserRepository::class, 4),
+        );
 
         $container = new Container();
         $container->set('twig', $this->twig);
@@ -45,14 +52,7 @@ final class DashboardControllerTest extends TestCase
     {
         $this->twig->method('render')->willReturn('<html>dashboard</html>');
 
-        $response = $this->controller->index(
-            $this->createRepositoryStub(ProjectRepository::class, 3),
-            $this->createRepositoryStub(BoardRepository::class, 2),
-            $this->createRepositoryStub(ColumnRepository::class, 8),
-            $this->createRepositoryStub(LabelRepository::class, 5),
-            $this->createRepositoryStub(CardRepository::class, 12),
-            $this->createRepositoryStub(UserRepository::class, 4),
-        );
+        $response = $this->controller->index();
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
         self::assertSame('<html>dashboard</html>', $response->getContent());
@@ -85,14 +85,7 @@ final class DashboardControllerTest extends TestCase
         );
         $this->controller->setContainer($container);
 
-        $this->controller->index(
-            $this->createRepositoryStub(ProjectRepository::class, 3),
-            $this->createRepositoryStub(BoardRepository::class, 2),
-            $this->createRepositoryStub(ColumnRepository::class, 8),
-            $this->createRepositoryStub(LabelRepository::class, 5),
-            $this->createRepositoryStub(CardRepository::class, 12),
-            $this->createRepositoryStub(UserRepository::class, 4),
-        );
+        $this->controller->index();
     }
 
     /**

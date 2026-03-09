@@ -163,6 +163,11 @@ final class CardTest extends TestCase
         self::assertNull($this->card->getDeletedAt());
     }
 
+    public function testCommentsCollectionIsEmptyByDefault(): void
+    {
+        self::assertCount(0, $this->card->getComments());
+    }
+
     public function testFluentSetters(): void
     {
         $author = new User();

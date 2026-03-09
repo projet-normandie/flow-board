@@ -99,6 +99,22 @@ final class UserTest extends TestCase
         self::assertCount(0, $this->user->getCards());
     }
 
+    public function testCommentsCollectionIsEmptyByDefault(): void
+    {
+        self::assertCount(0, $this->user->getComments());
+    }
+
+    public function testLoginHistoriesCollectionIsEmptyByDefault(): void
+    {
+        self::assertCount(0, $this->user->getLoginHistories());
+    }
+
+    public function testToString(): void
+    {
+        $this->user->setFullName('John Doe');
+        self::assertSame('John Doe', (string) $this->user);
+    }
+
     public function testEraseCredentialsDoesNotThrow(): void
     {
         $this->user->eraseCredentials();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Domain\Entity;
 
+use App\Domain\Entity\Board;
 use App\Domain\Entity\Column;
 use PHPUnit\Framework\TestCase;
 
@@ -36,6 +37,21 @@ final class ColumnTest extends TestCase
     public function testCardsCollectionIsEmptyByDefault(): void
     {
         self::assertCount(0, $this->column->getCards());
+    }
+
+    public function testBoard(): void
+    {
+        $board = new Board();
+        $board->setName('Sprint 1');
+
+        $this->column->setBoard($board);
+        self::assertSame($board, $this->column->getBoard());
+    }
+
+    public function testToString(): void
+    {
+        $this->column->setName('In Progress');
+        self::assertSame('In Progress', (string) $this->column);
     }
 
     public function testFluentSetters(): void
