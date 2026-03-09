@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
@@ -7,14 +6,36 @@
     <arg name="cache" value=".phpcs-cache"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
 
-    <rule ref="PSR12"/>
+    <!-- Show progress -->
+    <arg value="p"/>
 
-    <file>bin/</file>
+    <!-- Paths to check -->
     <file>config/</file>
-    <exclude-pattern>config/reference.php</exclude-pattern>
     <file>public/</file>
     <file>src/</file>
     <file>tests/</file>
+    <file>migrations/</file>
 
+    <!-- Exclude patterns -->
+    <exclude-pattern>*/var/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>config/preload.php</exclude-pattern>
+    <exclude-pattern>config/reference.php</exclude-pattern>
+    <exclude-pattern>config/bundles.php</exclude-pattern>
+    <exclude-pattern>public/index.php</exclude-pattern>
+    <exclude-pattern>src/Kernel.php</exclude-pattern>
+    <exclude-pattern>tests/bootstrap.php</exclude-pattern>
+
+    <!-- Use PSR-12 coding standard -->
+    <rule ref="PSR12">
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+
+    <!-- Additional rules -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.PHP.RequireStrictTypes"/>
 </ruleset>

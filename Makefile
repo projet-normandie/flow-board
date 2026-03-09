@@ -76,7 +76,9 @@ db-local: ## Create local database with fixtures
 db-test: ## Create test database with fixtures
 	@echo "$(YELLOW)Setting up test database...$(RESET)"
 	$(CONSOLE_BIN) doctrine:database:drop --force --env=test --if-exists
+	$(CONSOLE_BIN) doctrine:database:drop --force --env=test --if-exists --connection=audit
 	$(CONSOLE_BIN) doctrine:database:create --env=test
+	$(CONSOLE_BIN) doctrine:database:create --env=test --connection=audit
 	$(CONSOLE_BIN) doctrine:schema:update --force --env=test
 	@echo "$(YELLOW)Loading fixtures...$(RESET)"
 	$(CONSOLE_BIN) doctrine:fixtures:load --env=test --no-interaction
@@ -92,10 +94,6 @@ test: ## Lance les tests
 test-coverage: ## Lance les tests avec couverture de code
 	XDEBUG_MODE=coverage php bin/phpunit --coverage-html var/coverage
 
-test-vgr-core-api: ## Run VideoGamesRecords Core API tests only
-	@echo "$(GREEN)Running VideoGamesRecords Core API tests...$(RESET)"
-	@echo "$(YELLOW)Clearing rate limiter cache...$(RESET)"
-	$(PHPUNIT_BIN) tests/BoundedContext/VideoGamesRecords/Core/Functional/Api/ --testdox
 
 ##
 ## Assets

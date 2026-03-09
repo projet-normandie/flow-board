@@ -73,7 +73,7 @@ class ProjectController extends AbstractController
         foreach ($cards as $card) {
             /** @var \App\Domain\Entity\Column $column */
             $column = $card->getColumn();
-            $cardsByColumn[$column->getId()][] = $card;
+            $cardsByColumn[(int) $column->getId()][] = $card;
         }
 
         $boards = $boardRepository->findByProject($project);

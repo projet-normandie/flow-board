@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ColorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
+/** @extends AbstractCrudController<Label> */
 class LabelCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
