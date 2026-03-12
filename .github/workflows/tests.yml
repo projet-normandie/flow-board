@@ -55,22 +55,10 @@ jobs:
 
       - run: php bin/phpunit
 
-      - name: Notify Discord on failure
+      - name: Notify Telegram on failure
         if: failure()
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -s -X POST "$DISCORD_WEBHOOK" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "embeds": [{
-                "title": "❌ Tests en échec — FlowBoard",
-                "description": "Le job PHPUnit a échoué sur la branche `${{ github.ref_name }}`.",
-                "color": 15158332,
-                "fields": [
-                  { "name": "Commit", "value": "[`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})", "inline": true },
-                  { "name": "Déclencheur", "value": "${{ github.event_name }}", "inline": true },
-                  { "name": "Logs", "value": "[${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" }
-                ]
-              }]
-            }'
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d parse_mode="HTML" \
+            -d text="❌ <b>Tests en échec — FlowBoard</b>%0ABranche : <code>${{ github.ref_name }}</code>%0ADéclencheur : ${{ github.event_name }}%0A<a href='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'>Voir les logs</a>"
