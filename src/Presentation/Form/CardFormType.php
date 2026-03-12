@@ -60,6 +60,7 @@ class CardFormType extends AbstractType
                 'label' => 'card.priority',
                 'required' => false,
                 'placeholder' => 'card.placeholder.select',
+                'attr' => ['data-controller' => 'priority-selector'],
             ])
             ->add('dueDate', DateType::class, [
                 'label' => 'card.due_date',
@@ -72,6 +73,8 @@ class CardFormType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'required' => false,
+                'choice_attr' => fn (Label $label): array => ['data-color' => $label->getColor()],
+                'attr' => ['data-controller' => 'tom-select'],
             ])
             ->add('assignees', EntityType::class, [
                 'class' => User::class,
@@ -79,6 +82,7 @@ class CardFormType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
                 'required' => false,
+                'attr' => ['data-controller' => 'tom-select'],
             ]);
     }
 

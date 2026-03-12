@@ -61,6 +61,9 @@ Encore
 
     // enables Stimulus support
     .enableStimulusBridge('./assets/controllers.json')
+
+    // enables Vue.js support
+    .enableVueLoader()
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -1,0 +1,76 @@
+name: Tests
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Unit Tests (PHPUnit)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: symfony
+          MYSQL_PASSWORD: symfony
+          MYSQL_DATABASE: flow_board_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+
+      - uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Create additional databases
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE IF NOT EXISTS flow_board_audit_test;"
+          mysql -h 127.0.0.1 -u root -proot -e "GRANT ALL PRIVILEGES ON flow_board_audit_test.* TO 'symfony'@'%';"
+
+      - name: Create schema
+        run: php bin/console doctrine:schema:create --env=test
+
+      - name: Load fixtures
+        run: php bin/console doctrine:fixtures:load --no-interaction --env=test
+
+      - run: php bin/phpunit
+
+      - name: Notify Discord on failure
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          curl -s -X POST "$DISCORD_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "❌ Tests en échec — FlowBoard",
+                "description": "Le job PHPUnit a échoué sur la branche `${{ github.ref_name }}`.",
+                "color": 15158332,
+                "fields": [
+                  { "name": "Commit", "value": "[`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})", "inline": true },
+                  { "name": "Déclencheur", "value": "${{ github.event_name }}", "inline": true },
+                  { "name": "Logs", "value": "[${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" }
+                ]
+              }]
+            }'

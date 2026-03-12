@@ -1,5 +1,37 @@
 import './stimulus_bootstrap.js';
 
+// Vue Board
+import { createApp } from 'vue';
+import BoardApp from './vue/BoardApp.vue';
+
+let boardVueApp = null;
+
+function mountBoard() {
+    const mountEl = document.getElementById('vue-board');
+
+    if (boardVueApp) {
+        boardVueApp.unmount();
+        boardVueApp = null;
+    }
+
+    if (mountEl) {
+        const data = JSON.parse(mountEl.dataset.board);
+        boardVueApp = createApp(BoardApp, {
+            initialColumns: data.columns,
+            canAddCard: data.canAddCard,
+        });
+        boardVueApp.mount(mountEl);
+    }
+}
+
+document.addEventListener('turbo:load', mountBoard);
+document.addEventListener('turbo:before-cache', () => {
+    if (boardVueApp) {
+        boardVueApp.unmount();
+        boardVueApp = null;
+    }
+});
+
 // CSS/SCSS
 import './styles/app.scss';
 
@@ -91,7 +123,11 @@ function initializeModalContent(modalContent) {
                 if (contentType.includes('application/json')) {
                     const data = await response.json();
                     if (data.success && data.redirect) {
-                        window.location.href = data.redirect;
+                        if (window.Turbo) {
+                            window.Turbo.visit(data.redirect);
+                        } else {
+                            window.location.href = data.redirect;
+                        }
                     }
                 } else {
                     const html = await response.text();
