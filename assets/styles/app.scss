@@ -85,7 +85,51 @@ body {
     }
 
     .card-item {
-        background-color: var(--bs-tertiary-bg);
+        background-color: #3a3f44;
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border-color: #4a9eda;
+        }
+
+        .avatar-circle {
+            border-color: #3a3f44;
+        }
+    }
+
+    .ql-toolbar.ql-snow,
+    .ql-container.ql-snow {
+        background-color: #2b2f33;
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #dee2e6;
+    }
+
+    .ql-editor {
+        color: #dee2e6;
+
+        &.ql-blank::before {
+            color: rgba(255, 255, 255, 0.4);
+        }
+    }
+
+    .ql-snow .ql-stroke {
+        stroke: #dee2e6;
+    }
+
+    .ql-snow .ql-fill,
+    .ql-snow .ql-stroke.ql-fill {
+        fill: #dee2e6;
+    }
+
+    .ql-snow .ql-picker {
+        color: #dee2e6;
+    }
+
+    .ql-snow .ql-picker-options {
+        background-color: #2b2f33;
+        border-color: rgba(255, 255, 255, 0.2);
     }
 }
 
@@ -142,12 +186,28 @@ body {
 // Card items
 .card-item {
     border-left: 4px solid #dee2e6;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
     margin-bottom: 0.5rem;
     cursor: grab;
-    transition: box-shadow 0.15s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
 
     &:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+        border-color: #0079bf;
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
+
+    .card-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.4;
     }
 
     &.card-priority-low {
@@ -230,6 +290,13 @@ body {
 }
 
 // Priority filter buttons
+// Priority selector (form widget)
+.priority-selector-btn {
+    border: 1px solid;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    font-size: 0.8rem;
+}
+
 .card-priority-filter {
     border: 1px solid;
     color: inherit;

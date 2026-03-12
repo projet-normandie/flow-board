@@ -88,6 +88,6 @@
         </form>
     </div>
 
-    {% include '@App/board/_content.html.twig' %}
+    <div id="vue-board" data-board="{{ boardJson|e('html_attr') }}"></div>
 </div>
 {% endblock %}

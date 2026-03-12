@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Presentation\Controller;
 
+use App\Application\Security\CardVoter;
+use App\Domain\Entity\Card;
 use App\Domain\Entity\Enum\CardPriority;
 use App\Domain\Entity\Project;
 use App\Domain\Entity\User;
@@ -15,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
@@ -45,6 +48,7 @@ class ProjectController extends AbstractController
         BoardRepository $boardRepository,
         CardRepository $cardRepository,
         LabelRepository $labelRepository,
+        UrlGeneratorInterface $urlGenerator,
     ): Response {
         $board = $boardRepository->find($boardId);
 
@@ -78,17 +82,88 @@ class ProjectController extends AbstractController
 
         $boards = $boardRepository->findByProject($project);
 
+        $boardJson = $this->buildBoardJson($board->getColumns()->toArray(), $cardsByColumn, $urlGenerator);
+
         return $this->render('@App/project/board.html.twig', [
             'project' => $project,
             'board' => $board,
             'boards' => $boards,
-            'columns' => $board->getColumns(),
-            'cardsByColumn' => $cardsByColumn,
             'selectedPriority' => $priority,
             'priorities' => CardPriority::cases(),
             'labels' => $labelRepository->findAll(),
             'selectedLabels' => $labelIds,
             'filterMine' => $filterMine,
+            'boardJson' => $boardJson,
+        ]);
+    }
+
+    /**
+     * @param \App\Domain\Entity\Column[] $columns
+     * @param array<int, Card[]> $cardsByColumn
+     */
+    private function buildBoardJson(array $columns, array $cardsByColumn, UrlGeneratorInterface $urlGenerator): string
+    {
+        $now = new \DateTimeImmutable();
+
+        $columnsData = array_map(function (\App\Domain\Entity\Column $column) use ($cardsByColumn, $urlGenerator, $now): array {
+            $cards = $cardsByColumn[$column->getId() ?? 0] ?? [];
+
+            $cardsData = array_map(function (Card $card) use ($urlGenerator, $now): array {
+                $dueDate = $card->getDueDate();
+                $dueDateDiffDays = null;
+                $dueDateFormatted = null;
+
+                if ($dueDate !== null) {
+                    $dueDateFormatted = $dueDate->format('d/m/Y');
+                    $diff = $now->diff($dueDate);
+                    $dueDateDiffDays = (int) ($diff->invert ? -$diff->days : $diff->days);
+                }
+
+                $assignees = array_map(static function (User $assignee): array {
+                    $hash = md5(strtolower(trim($assignee->getEmail())));
+
+                    return [
+                        'id' => $assignee->getId(),
+                        'fullName' => $assignee->getFullName(),
+                        'gravatar' => "https://www.gravatar.com/avatar/{$hash}?d=mp&s=26",
+                    ];
+                }, $card->getAssignees()->toArray());
+
+                $labels = array_map(static fn (\App\Domain\Entity\Label $label): array => [
+                    'id' => $label->getId(),
+                    'name' => $label->getName(),
+                    'color' => $label->getColor(),
+                ], $card->getLabels()->toArray());
+
+                return [
+                    'id' => $card->getId(),
+                    'title' => $card->getTitle(),
+                    'priority' => $card->getPriority()?->value,
+                    'dueDate' => $dueDateFormatted,
+                    'dueDateDiffDays' => $dueDateDiffDays,
+                    'labels' => $labels,
+                    'assignees' => $assignees,
+                    'canEdit' => $this->isGranted(CardVoter::EDIT, $card),
+                    'showUrl' => $urlGenerator->generate('app_card_show', ['id' => $card->getId()]),
+                    'editUrl' => $urlGenerator->generate('app_card_edit_modal', ['id' => $card->getId()]),
+                    'commentsCount' => $card->getComments()->count(),
+                    'moveUrl' => $urlGenerator->generate('app_card_move', ['id' => $card->getId()]),
+                ];
+            }, $cards);
+
+            return [
+                'id' => $column->getId(),
+                'name' => $column->getName(),
+                'position' => $column->getPosition(),
+                'moveUrl' => $urlGenerator->generate('app_column_move', ['id' => $column->getId()]),
+                'newCardUrl' => $urlGenerator->generate('app_column_card_new', ['id' => $column->getId()]),
+                'cards' => $cardsData,
+            ];
+        }, $columns);
+
+        return (string) json_encode([
+            'columns' => $columnsData,
+            'canAddCard' => $this->isGranted('ROLE_USER'),
         ]);
     }
 }

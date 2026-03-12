@@ -141,6 +141,7 @@ final class ProjectControllerTest extends TestCase
             $boardRepository,
             $cardRepository,
             $labelRepository,
+            $this->urlGenerator,
         );
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -160,7 +161,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board(new Request(), $project, 999, $boardRepository, $cardRepository, $labelRepository);
+        $this->controller->board(new Request(), $project, 999, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator);
     }
 
     public function testBoardThrowsNotFoundWhenBoardBelongsToDifferentProject(): void
@@ -183,7 +184,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository);
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator);
     }
 
     public function testBoardGroupsCardsByColumn(): void
@@ -197,10 +198,15 @@ final class ProjectControllerTest extends TestCase
 
         $column = new Column();
         $this->setEntityId($column, 10);
+        $column->setName('To Do');
+        $column->setPosition(1000);
         $column->setBoard($board);
+        $board->addColumn($column);
 
         $card = $this->createStub(\App\Domain\Entity\Card::class);
         $card->method('getColumn')->willReturn($column);
+        $card->method('getLabels')->willReturn(new \Doctrine\Common\Collections\ArrayCollection());
+        $card->method('getAssignees')->willReturn(new \Doctrine\Common\Collections\ArrayCollection());
 
         $boardRepository = $this->createStub(BoardRepository::class);
         $boardRepository->method('find')->willReturn($board);
@@ -214,12 +220,16 @@ final class ProjectControllerTest extends TestCase
             ->method('render')
             ->with(
                 '@App/project/board.html.twig',
-                self::callback(function (array $params) use ($board, $project, $card): bool {
+                self::callback(function (array $params) use ($board, $project): bool {
+                    /** @var array{columns: array<array{id: int, cards: array<mixed>}>} $boardJson */
+                    $boardJson = json_decode($params['boardJson'], true);
+
                     return $params['project'] === $project
                         && $params['board'] === $board
                         && $params['boards'] === [$board]
-                        && isset($params['cardsByColumn'][10])
-                        && $params['cardsByColumn'][10] === [$card];
+                        && count($boardJson['columns']) === 1
+                        && $boardJson['columns'][0]['id'] === 10
+                        && count($boardJson['columns'][0]['cards']) === 1;
                 }),
             )
             ->willReturn('<html>board</html>');
@@ -236,7 +246,9 @@ final class ProjectControllerTest extends TestCase
         $labelRepository = $this->createStub(LabelRepository::class);
         $labelRepository->method('findAll')->willReturn([]);
 
-        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository);
+        $this->urlGenerator->method('generate')->willReturn('/some/url');
+
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator);
     }
 
     private function setEntityId(object $entity, int $id): void
