@@ -94,6 +94,13 @@ card.due_date: Due date
 card.labels: Labels
 card.assignees: Assignees
 card.reported_by: Reported by
+checklist.title: Checklists
+checklist.add: Add a checklist
+checklist.add_item: Add an item
+checklist.title.placeholder: Checklist title
+checklist.item.placeholder: New item
+checklist.delete: Delete checklist
+checklist.progress: "%checked%/%total%"
 card.new: New card
 card.add: Add a card
 card.edit: Edit card

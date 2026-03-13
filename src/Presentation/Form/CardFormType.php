@@ -11,6 +11,7 @@ use App\Domain\Entity\Label;
 use App\Domain\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -87,6 +88,13 @@ class CardFormType extends AbstractType
             ->add('reportedBy', TextType::class, [
                 'label' => 'card.reported_by',
                 'required' => false,
+            ])
+            ->add('checklists', CollectionType::class, [
+                'entry_type' => ChecklistType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => false,
             ]);
     }
 
