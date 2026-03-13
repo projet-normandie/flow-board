@@ -1,14 +1,12 @@
 name: Deploy
 
 on:
-    push:
-        branches: [ dev ]
     workflow_dispatch:
         inputs:
             environment:
                 description: 'Environment'
                 required: true
-                default: 'production'
+                default: 'staging'
                 type: choice
                 options:
                     - staging

@@ -6,7 +6,7 @@
         handle=".board-column-drag-handle"
         animation="150"
         ghost-class="sortable-ghost"
-        @end="onColumnDragEnd"
+        @change="onColumnsChange"
     >
         <template #item="{ element: column }">
             <BoardColumn
@@ -35,9 +35,11 @@ export default defineComponent({
     setup(props) {
         const localColumns = ref([...props.initialColumns]);
 
-        async function onColumnDragEnd(event) {
-            const column = localColumns.value[event.newIndex];
-            const position = (event.newIndex + 1) * 1000;
+        async function onColumnsChange(event) {
+            if (!event.moved) return;
+
+            const column = event.moved.element;
+            const position = (event.moved.newIndex + 1) * 1000;
 
             try {
                 await fetch(column.moveUrl, {
@@ -54,7 +56,7 @@ export default defineComponent({
             }
         }
 
-        return { localColumns, onColumnDragEnd };
+        return { localColumns, onColumnsChange };
     },
 });
 </script>
