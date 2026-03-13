@@ -67,6 +67,14 @@
                 <span class="text-muted">—</span>
             {% endif %}
         </div>
+
+        {# Reported by #}
+        {% if card.reportedBy %}
+            <div>
+                <small class="text-muted d-block mb-1">{{ 'card.reported_by'|trans }}</small>
+                <span>{{ card.reportedBy }}</span>
+            </div>
+        {% endif %}
     </div>
 
     {# Two-column layout: description left, comments right #}

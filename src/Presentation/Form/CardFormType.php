@@ -83,6 +83,10 @@ class CardFormType extends AbstractType
                 'expanded' => false,
                 'required' => false,
                 'attr' => ['data-controller' => 'tom-select'],
+            ])
+            ->add('reportedBy', TextType::class, [
+                'label' => 'card.reported_by',
+                'required' => false,
             ]);
     }
 

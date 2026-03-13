@@ -63,6 +63,9 @@ class Card
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'card', orphanRemoval: true)]
     private Collection $comments;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $reportedBy = null;
+
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
@@ -216,6 +219,18 @@ class Card
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    public function getReportedBy(): ?string
+    {
+        return $this->reportedBy;
+    }
+
+    public function setReportedBy(?string $reportedBy): static
+    {
+        $this->reportedBy = $reportedBy;
+
+        return $this;
     }
 
     public function getDeletedAt(): ?\DateTimeImmutable
