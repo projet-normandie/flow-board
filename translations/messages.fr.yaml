@@ -93,6 +93,7 @@ card.priority: Priorité
 card.due_date: Date d'échéance
 card.labels: Labels
 card.assignees: Assignés
+card.reported_by: Signalé par
 card.new: Nouvelle carte
 card.add: Ajouter une carte
 card.edit: Modifier la carte

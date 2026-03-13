@@ -22,6 +22,8 @@
         </div>
     </div>
 
+    {{ form_row(form.reportedBy) }}
+
     <button type="submit" class="btn btn-primary">
         <i class="bi bi-check-lg me-1"></i>{{ button_label|default('common.save'|trans) }}
     </button>
