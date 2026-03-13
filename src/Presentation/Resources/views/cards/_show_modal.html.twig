@@ -4,174 +4,192 @@
         <span class="badge rounded-pill" style="background-color: {{ card.column.board.project.color }};">
             {{ card.column.board.project.name }}
         </span>
+        {% if is_granted('CARD_EDIT', card) %}
+            <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="openAjaxModal('{{ path('app_card_edit_modal', { id: card.id }) }}')">
+                <i class="bi bi-pencil me-1"></i>{{ 'card.show.edit_btn'|trans }}
+            </button>
+        {% endif %}
     </div>
     <button type="button" class="ajax-modal-close" onclick="closeAjaxModal()">&times;</button>
 </div>
-<div class="ajax-modal-body">
-    {# Card title #}
-    <h4 class="mb-3">{{ card.title }}</h4>
+<div class="ajax-modal-body ajax-modal-body--split">
 
-    {# Meta row #}
-    <div class="d-flex flex-wrap gap-4 mb-4 pb-3 border-bottom">
-        {# Members #}
-        <div>
-            <small class="text-muted d-block mb-1">{{ 'card.assignees'|trans }}</small>
-            {% if card.assignees|length > 0 %}
-                <div class="avatar-group">
-                    {% for assignee in card.assignees %}
-                        <img class="avatar-circle" src="{{ assignee.email|gravatar }}" alt="{{ assignee.fullName }}" title="{{ assignee.fullName }}">
-                    {% endfor %}
-                </div>
-            {% else %}
-                <span class="text-muted">—</span>
-            {% endif %}
-        </div>
+    {# ── Left panel ──────────────────────────────────────────────────────── #}
+    <div class="card-show-left">
 
-        {# Labels #}
-        {% if card.labels|length > 0 %}
+        {# Title #}
+        <h4 class="mb-3">{{ card.title }}</h4>
+
+        {# Meta row #}
+        <div class="d-flex flex-wrap gap-4 mb-4 pb-3 border-bottom">
             <div>
-                <small class="text-muted d-block mb-1">{{ 'card.labels'|trans }}</small>
-                <div>
-                    {% for label in card.labels %}
-                        <span class="badge rounded-pill" style="background-color: {{ label.color }};">
-                            {{ label.name }}
-                        </span>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-
-        {# Due date #}
-        <div>
-            <small class="text-muted d-block mb-1">{{ 'card.due_date'|trans }}</small>
-            {% if card.dueDate %}
-                {% set now = "now"|date("U") %}
-                {% set due = card.dueDate|date("U") %}
-                {% set diff_days = ((due - now) / 86400)|round(0, 'floor') %}
-                <span class="{% if diff_days < 0 %}text-danger fw-bold{% elseif diff_days < 3 %}text-warning fw-bold{% endif %}">
-                    {{ card.dueDate|date('d/m/Y') }}
-                </span>
-            {% else %}
-                <span class="text-muted">—</span>
-            {% endif %}
-        </div>
-
-        {# Priority #}
-        <div>
-            <small class="text-muted d-block mb-1">{{ 'card.priority'|trans }}</small>
-            {% if card.priority %}
-                <span class="badge card-priority-badge-{{ card.priority.value }}">
-                    {{ ('card.priority.' ~ card.priority.value)|trans }}
-                </span>
-            {% else %}
-                <span class="text-muted">—</span>
-            {% endif %}
-        </div>
-
-        {# Reported by #}
-        {% if card.reportedBy %}
-            <div>
-                <small class="text-muted d-block mb-1">{{ 'card.reported_by'|trans }}</small>
-                <span>{{ card.reportedBy }}</span>
-            </div>
-        {% endif %}
-    </div>
-
-    {# Two-column layout: description left, comments right #}
-    <div class="row">
-        {# Left column: description #}
-        <div class="col-lg-7">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="text-muted mb-0"><i class="bi bi-text-left me-1"></i>{{ 'card.description'|trans }}</h6>
-                {% if is_granted('CARD_EDIT', card) %}
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="openAjaxModal('{{ path('app_card_edit_modal', { id: card.id }) }}')">
-                        {{ 'card.show.edit_btn'|trans }}
-                    </button>
-                {% endif %}
-            </div>
-            {% if card.description %}
-                <div class="card-description ql-editor mb-4">{{ card.description|raw }}</div>
-            {% else %}
-                <p class="text-muted fst-italic mb-4">{{ 'card.show.no_description'|trans }}</p>
-            {% endif %}
-
-            {# Author + dates #}
-            <div class="border-top pt-3 mt-3">
-                <div class="d-flex align-items-center mb-2">
-                    <img class="avatar-circle me-2" src="{{ card.author.email|gravatar }}" alt="{{ card.author.fullName }}">
-                    <div>
-                        <small class="fw-semibold">{{ card.author.fullName }}</small>
-                        <small class="text-muted d-block">{{ 'card.show.created_on'|trans({ '%date%': card.createdAt|date('d/m/Y H:i') }) }}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {# Right column: activity timeline #}
-        <div class="col-lg-5">
-            <div class="card-comments-section">
-                <h6 class="text-muted mb-3">
-                    <i class="bi bi-chat-left-text me-1"></i>{{ 'comment.title'|trans }}
-                </h6>
-
-                {# Comment form #}
-                <form data-ajax-form action="{{ path('app_comment_create', { id: card.id }) }}" method="POST" class="mb-3">
-                    <textarea name="content" class="form-control form-control-sm mb-2" rows="2" placeholder="{{ 'comment.placeholder'|trans }}" required></textarea>
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-sm btn-primary">
-                            <i class="bi bi-send me-1"></i>{{ 'comment.submit'|trans }}
-                        </button>
-                    </div>
-                </form>
-
-                {# Unified timeline #}
-                {% if timeline is defined and timeline|length > 0 %}
-                    <div class="comment-list">
-                        {% for item in timeline %}
-                            {% if item.activityType.value == 'comment' %}
-                                {# Comment entry #}
-                                <div class="comment-item mb-3">
-                                    <div class="d-flex align-items-start gap-2">
-                                        <img class="avatar-circle flex-shrink-0" src="{{ item.userEmail|gravatar }}" alt="{{ item.username }}">
-                                        <div class="flex-grow-1 min-width-0">
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <small class="fw-semibold">{{ item.username }}</small>
-                                                <small class="text-muted">{{ item.occurredAt|date('d/m/Y H:i') }}</small>
-                                            </div>
-                                            <div class="comment-content small">{{ item.commentContent|nl2br }}</div>
-                                            {% if item.commentAuthorId == app.user.id or is_granted('ROLE_ADMIN') %}
-                                                <form data-ajax-form data-confirm="{{ 'comment.confirm_delete'|trans }}" action="{{ path('app_comment_delete', { id: item.commentId }) }}" method="POST" class="mt-1">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_comment' ~ item.commentId) }}">
-                                                    <button type="submit" class="btn btn-link btn-sm text-danger p-0">
-                                                        <small><i class="bi bi-trash me-1"></i>{{ 'comment.delete'|trans }}</small>
-                                                    </button>
-                                                </form>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% else %}
-                                {# Audit entry #}
-                                <div class="mb-2">
-                                    <div class="d-flex align-items-center gap-2 text-muted small">
-                                        <i class="bi {{ item.iconClass }}"></i>
-                                        <span>
-                                            <strong>{{ item.username }}</strong>
-                                            {{ item.translationKey|trans(item.translationParams ?? {}) }}
-                                        </span>
-                                        <span class="ms-auto text-nowrap">{{ item.occurredAt|date('d/m/Y H:i') }}</span>
-                                    </div>
-                                </div>
-                            {% endif %}
+                <small class="text-muted d-block mb-1">{{ 'card.assignees'|trans }}</small>
+                {% if card.assignees|length > 0 %}
+                    <div class="avatar-group">
+                        {% for assignee in card.assignees %}
+                            <img class="avatar-circle" src="{{ assignee.email|gravatar }}" alt="{{ assignee.fullName }}" title="{{ assignee.fullName }}">
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-chat-left d-block mb-2" style="font-size: 1.5rem;"></i>
-                        <small>{{ 'activity.empty'|trans }}</small>
-                    </div>
+                    <span class="text-muted">—</span>
                 {% endif %}
             </div>
+
+            {% if card.labels|length > 0 %}
+                <div>
+                    <small class="text-muted d-block mb-1">{{ 'card.labels'|trans }}</small>
+                    <div>
+                        {% for label in card.labels %}
+                            <span class="badge rounded-pill" style="background-color: {{ label.color }};">{{ label.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div>
+                <small class="text-muted d-block mb-1">{{ 'card.due_date'|trans }}</small>
+                {% if card.dueDate %}
+                    {% set now = "now"|date("U") %}
+                    {% set due = card.dueDate|date("U") %}
+                    {% set diff_days = ((due - now) / 86400)|round(0, 'floor') %}
+                    <span class="{% if diff_days < 0 %}text-danger fw-bold{% elseif diff_days < 3 %}text-warning fw-bold{% endif %}">
+                        {{ card.dueDate|date('d/m/Y') }}
+                    </span>
+                {% else %}
+                    <span class="text-muted">—</span>
+                {% endif %}
+            </div>
+
+            <div>
+                <small class="text-muted d-block mb-1">{{ 'card.priority'|trans }}</small>
+                {% if card.priority %}
+                    <span class="badge card-priority-badge-{{ card.priority.value }}">
+                        {{ ('card.priority.' ~ card.priority.value)|trans }}
+                    </span>
+                {% else %}
+                    <span class="text-muted">—</span>
+                {% endif %}
+            </div>
+
+            {% if card.reportedBy %}
+                <div>
+                    <small class="text-muted d-block mb-1">{{ 'card.reported_by'|trans }}</small>
+                    <span>{{ card.reportedBy }}</span>
+                </div>
+            {% endif %}
         </div>
+
+        {# Description #}
+        <div class="mb-4">
+            <h6 class="text-muted mb-2"><i class="bi bi-text-left me-1"></i>{{ 'card.description'|trans }}</h6>
+            {% if card.description %}
+                <div class="card-description ql-editor">{{ card.description|raw }}</div>
+            {% else %}
+                <p class="text-muted fst-italic">{{ 'card.show.no_description'|trans }}</p>
+            {% endif %}
+        </div>
+
+        {# Checklists #}
+        {% if card.checklists|length > 0 %}
+            <div class="mb-4">
+                {% for checklist in card.checklists %}
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <h6 class="mb-0"><i class="bi bi-check2-square me-1"></i>{{ checklist.title }}</h6>
+                            <small class="text-muted">{{ checklist.checkedCount }}/{{ checklist.totalCount }}</small>
+                        </div>
+                        {% if checklist.totalCount > 0 %}
+                            <div class="progress mb-2" style="height: 6px;">
+                                <div class="progress-bar" style="width: {{ (checklist.checkedCount / checklist.totalCount * 100)|round }}%;"></div>
+                            </div>
+                        {% endif %}
+                        {% for item in checklist.items %}
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <i class="bi {{ item.checked ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted' }}"></i>
+                                <span class="{{ item.checked ? 'text-decoration-line-through text-muted' : '' }}">{{ item.title }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Author #}
+        <div class="border-top pt-3 mt-auto">
+            <div class="d-flex align-items-center">
+                <img class="avatar-circle me-2" src="{{ card.author.email|gravatar }}" alt="{{ card.author.fullName }}">
+                <div>
+                    <small class="fw-semibold">{{ card.author.fullName }}</small>
+                    <small class="text-muted d-block">{{ 'card.show.created_on'|trans({ '%date%': card.createdAt|date('d/m/Y H:i') }) }}</small>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    {# ── Right panel ─────────────────────────────────────────────────────── #}
+    <div class="card-show-right">
+
+        <div class="card-show-right-header">
+            <h6 class="text-muted mb-0"><i class="bi bi-chat-left-text me-1"></i>{{ 'comment.title'|trans }}</h6>
+        </div>
+
+        <div class="card-show-right-form">
+            <form data-ajax-form action="{{ path('app_comment_create', { id: card.id }) }}" method="POST">
+                <textarea name="content" class="form-control form-control-sm mb-2" rows="2" placeholder="{{ 'comment.placeholder'|trans }}" required></textarea>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-send me-1"></i>{{ 'comment.submit'|trans }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-show-right-timeline">
+            {% if timeline is defined and timeline|length > 0 %}
+                {% for item in timeline %}
+                    {% if item.activityType.value == 'comment' %}
+                        <div class="comment-item mb-3">
+                            <div class="d-flex align-items-start gap-2">
+                                <img class="avatar-circle flex-shrink-0" src="{{ item.userEmail|gravatar }}" alt="{{ item.username }}">
+                                <div class="flex-grow-1 min-width-0">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <small class="fw-semibold">{{ item.username }}</small>
+                                        <small class="text-muted">{{ item.occurredAt|date('d/m/Y H:i') }}</small>
+                                    </div>
+                                    <div class="comment-content small">{{ item.commentContent|nl2br }}</div>
+                                    {% if item.commentAuthorId == app.user.id or is_granted('ROLE_ADMIN') %}
+                                        <form data-ajax-form data-confirm="{{ 'comment.confirm_delete'|trans }}" action="{{ path('app_comment_delete', { id: item.commentId }) }}" method="POST" class="mt-1">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete_comment' ~ item.commentId) }}">
+                                            <button type="submit" class="btn btn-link btn-sm text-danger p-0">
+                                                <small><i class="bi bi-trash me-1"></i>{{ 'comment.delete'|trans }}</small>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center gap-2 text-muted small">
+                                <i class="bi {{ item.iconClass }}"></i>
+                                <span>
+                                    <strong>{{ item.username }}</strong>
+                                    {{ item.translationKey|trans(item.translationParams ?? {}) }}
+                                </span>
+                                <span class="ms-auto text-nowrap">{{ item.occurredAt|date('d/m/Y H:i') }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-chat-left d-block mb-2" style="font-size: 1.5rem;"></i>
+                    <small>{{ 'activity.empty'|trans }}</small>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
 </div>

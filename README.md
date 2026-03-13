@@ -122,8 +122,10 @@ src/
 ```
 Project 1──N Board 1──N Column 1──N Card N──M Label
                                      │
-                                     ├── author    (M:1 → User)
-                                     └── assignees (M:N → User)
+                                     ├── author     (M:1 → User)
+                                     ├── assignees  (M:N → User)
+                                     ├── comments   (1:N → Comment)
+                                     └── checklists (1:N → Checklist 1──N ChecklistItem)
 ```
 
 ### Enums
@@ -145,7 +147,8 @@ Disabled users (`enabled = false`) are blocked at login by Symfony Security.
 
 - **Multi-project boards:** each project has one or more boards with columns
 - **Drag & drop:** SortableJS with position spacing of 1000, auto-rebalance when gaps are too small
-- **Card details:** title, rich text description (Quill), priority, due date, labels, assignees
+- **Card details:** title, rich text description (Quill), priority, due date, labels, assignees, reported by
+- **Checklists:** multiple checklists per card with orderable items (drag & drop), progress bar
 - **Archive:** soft delete via Gedmo, dedicated archive page with restore
 - **Admin panel:** CRUD for projects, boards, columns, labels, users + dashboard with stats
 - **Audit trail:** all entity changes tracked via auditor-bundle
@@ -178,14 +181,15 @@ Disabled users (`enabled = false`) are blocked at login by Symfony Security.
 - [x] Board filtering by priority (button toggle per level)
 - [x] Board filtering by label (Tom Select multi-select)
 - [x] Board filtering "My cards" (assigned to current user)
-- [x] Comments on cards
 - [x] Gravatar avatars (email-based, with mystery person fallback)
+- [x] Checklists on cards (multiple per card, items orderable, progress bar)
+- [x] Reported by field on cards (external person name)
+- [x] Activity history on cards (audit trail + comments unified timeline)
 
 ### V2
 
 - [ ] Notifications on card create / move (Push discord)
 - [ ] User-Project permissions (project_user table)
-- [ ] Activity history on cards
 - [ ] File attachments (VichUploaderBundle)
 - [ ] Full-text search
 - [ ] CSV/PDF export

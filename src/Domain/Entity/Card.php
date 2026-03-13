@@ -63,6 +63,11 @@ class Card
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'card', orphanRemoval: true)]
     private Collection $comments;
 
+    /** @var Collection<int, Checklist> */
+    #[ORM\OneToMany(targetEntity: Checklist::class, mappedBy: 'card', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $checklists;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reportedBy = null;
 
@@ -74,6 +79,7 @@ class Card
         $this->labels = new ArrayCollection();
         $this->assignees = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->checklists = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -229,6 +235,31 @@ class Card
     public function setReportedBy(?string $reportedBy): static
     {
         $this->reportedBy = $reportedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Checklist>
+     */
+    public function getChecklists(): Collection
+    {
+        return $this->checklists;
+    }
+
+    public function addChecklist(Checklist $checklist): static
+    {
+        if (!$this->checklists->contains($checklist)) {
+            $this->checklists->add($checklist);
+            $checklist->setCard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChecklist(Checklist $checklist): static
+    {
+        $this->checklists->removeElement($checklist);
 
         return $this;
     }
