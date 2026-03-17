@@ -7,9 +7,14 @@ namespace App\Presentation\Controller;
 use App\Application\Security\CardVoter;
 use App\Domain\Entity\Card;
 use App\Domain\Entity\Column;
+use App\Domain\Entity\Enum\CardPriority;
+use App\Domain\Entity\Label;
 use App\Domain\Entity\User;
 use App\Infrastructure\Doctrine\Repository\CardRepository;
 use App\Infrastructure\Doctrine\Repository\ColumnRepository;
+use App\Infrastructure\Doctrine\Repository\LabelRepository;
+use App\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Presentation\Twig\GravatarExtension;
 use App\Application\Service\ActivityService;
 use App\Presentation\Form\CardFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -99,45 +104,17 @@ class CardController extends AbstractController
     }
 
     #[Route('/{id}/show', name: 'app_card_show', methods: ['GET'])]
-    public function show(Card $card, ActivityService $activityService): Response
-    {
+    public function show(
+        Card $card,
+        ActivityService $activityService,
+        LabelRepository $labelRepository,
+        UserRepository $userRepository,
+    ): Response {
         return $this->render('@App/cards/_show_modal.html.twig', [
             'card' => $card,
             'timeline' => $activityService->getCardTimeline($card),
-        ]);
-    }
-
-    #[Route('/{id}/edit-modal', name: 'app_card_edit_modal', methods: ['GET', 'POST'])]
-    public function editModal(
-        Request $request,
-        Card $card,
-        EntityManagerInterface $entityManager,
-    ): Response {
-        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
-
-        $form = $this->createForm(CardFormType::class, $card, ['edit_mode' => true]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            $this->addFlash('success', 'card.flash.updated');
-
-            /** @var Column $column */
-            $column = $card->getColumn();
-
-            return new JsonResponse([
-                'success' => true,
-                'redirect' => $this->generateUrl('app_project_board', [
-                    'id' => $column->getBoard()->getProject()->getId(),
-                    'boardId' => $column->getBoard()->getId(),
-                ]),
-            ]);
-        }
-
-        return $this->render('@App/cards/_edit_modal.html.twig', [
-            'card' => $card,
-            'form' => $form,
+            'allLabels' => $labelRepository->findAll(),
+            'allUsers' => $userRepository->findAll(),
         ]);
     }
 
@@ -168,6 +145,207 @@ class CardController extends AbstractController
         }
 
         return $this->redirect($redirectUrl);
+    }
+
+    #[Route('/{id}/update-title', name: 'app_card_update_title', methods: ['POST'])]
+    public function updateTitle(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        if (!$this->isCsrfTokenValid('update_title' . $card->getId(), $token)) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+        }
+
+        $title = trim($request->request->getString('value'));
+        if ($title === '') {
+            return new JsonResponse(['error' => 'Title cannot be empty'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $card->setTitle($title);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    #[Route('/{id}/update-assignees', name: 'app_card_update_assignees', methods: ['POST'])]
+    public function updateAssignees(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        GravatarExtension $gravatar,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        if (!$this->isCsrfTokenValid('update_assignees' . $card->getId(), $token)) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+        }
+
+        /** @var list<string> $userIds */
+        $userIds = $request->request->all('userIds');
+
+        foreach ($card->getAssignees()->toArray() as $assignee) {
+            $card->removeAssignee($assignee);
+        }
+
+        foreach ($userIds as $userId) {
+            $user = $userRepository->find((int) $userId);
+            if ($user !== null) {
+                $card->addAssignee($user);
+            }
+        }
+
+        $entityManager->flush();
+
+        $usersData = array_values(array_map(
+            static fn (User $u): array => [
+                'id' => $u->getId(),
+                'fullName' => $u->getFullName(),
+                'gravatarUrl' => $gravatar->gravatar($u->getEmail()),
+            ],
+            $card->getAssignees()->toArray()
+        ));
+
+        return new JsonResponse(['success' => true, 'assignees' => $usersData]);
+    }
+
+    #[Route('/{id}/update-labels', name: 'app_card_update_labels', methods: ['POST'])]
+    public function updateLabels(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+        LabelRepository $labelRepository,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        if (!$this->isCsrfTokenValid('update_labels' . $card->getId(), $token)) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+        }
+
+        /** @var list<string> $labelIds */
+        $labelIds = $request->request->all('labelIds');
+
+        foreach ($card->getLabels()->toArray() as $label) {
+            $card->removeLabel($label);
+        }
+
+        foreach ($labelIds as $labelId) {
+            $label = $labelRepository->find((int) $labelId);
+            if ($label !== null) {
+                $card->addLabel($label);
+            }
+        }
+
+        $entityManager->flush();
+
+        $labelsData = array_values(array_map(
+            static fn (Label $l): array => ['id' => $l->getId(), 'name' => $l->getName(), 'color' => $l->getColor()],
+            $card->getLabels()->toArray()
+        ));
+
+        return new JsonResponse(['success' => true, 'labels' => $labelsData]);
+    }
+
+    #[Route('/{id}/update-due-date', name: 'app_card_update_due_date', methods: ['POST'])]
+    public function updateDueDate(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        if (!$this->isCsrfTokenValid('update_due_date' . $card->getId(), $token)) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+        }
+
+        $dateStr = trim($request->request->getString('dueDate'));
+
+        if ($dateStr === '') {
+            $card->setDueDate(null);
+        } else {
+            $date = \DateTimeImmutable::createFromFormat('Y-m-d', $dateStr);
+            if ($date === false) {
+                return new JsonResponse(['error' => 'Invalid date format'], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            $card->setDueDate($date);
+        }
+
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    #[Route('/{id}/update-reported-by', name: 'app_card_update_reported_by', methods: ['POST'])]
+    public function updateReportedBy(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        if (!$this->isCsrfTokenValid('update_reported_by' . $card->getId(), $token)) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+        }
+
+        $value = trim($request->request->getString('value'));
+        $card->setReportedBy($value ?: null);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    #[Route('/{id}/update-priority', name: 'app_card_update_priority', methods: ['POST'])]
+    public function updatePriority(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        if (!$this->isCsrfTokenValid('update_priority' . $card->getId(), $token)) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+        }
+
+        $priorityValue = $request->request->getString('priority');
+        $priority = $priorityValue !== '' ? CardPriority::tryFrom($priorityValue) : null;
+
+        if ($priorityValue !== '' && $priority === null) {
+            return new JsonResponse(['error' => 'Invalid priority value'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $card->setPriority($priority);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    #[Route('/{id}/update-description', name: 'app_card_update_description', methods: ['POST'])]
+    public function updateDescription(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        if (!$this->isCsrfTokenValid('update_description' . $card->getId(), $token)) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+        }
+
+        $description = $request->request->getString('description');
+        $card->setDescription($description ?: null);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 
     #[Route('/{id}/move', name: 'app_card_move', methods: ['POST'])]

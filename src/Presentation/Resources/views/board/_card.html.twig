@@ -6,11 +6,6 @@
                 {{ card.title }}
             </a>
             </h6>
-            {% if is_granted('CARD_EDIT', card) %}
-                <button type="button" class="btn btn-sm btn-link text-muted p-0" title="{{ 'card.edit'|trans }}" onclick="event.stopPropagation(); openAjaxModal('{{ path('app_card_edit_modal', { id: card.id }) }}')">
-                    <i class="bi bi-pencil"></i>
-                </button>
-            {% endif %}
         </div>
 
         {% if card.labels|length > 0 %}

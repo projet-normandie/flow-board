@@ -11,6 +11,8 @@ use App\Domain\Entity\Project;
 use App\Domain\Entity\User;
 use App\Infrastructure\Doctrine\Repository\CardRepository;
 use App\Infrastructure\Doctrine\Repository\ColumnRepository;
+use App\Infrastructure\Doctrine\Repository\LabelRepository;
+use App\Infrastructure\Doctrine\Repository\UserRepository;
 use App\Application\Service\ActivityService;
 use App\Presentation\Controller\CardController;
 use Doctrine\ORM\EntityManagerInterface;
@@ -182,7 +184,12 @@ final class CardControllerTest extends TestCase
         $activityService = $this->createStub(ActivityService::class);
         $activityService->method('getCardTimeline')->willReturn([]);
 
-        $response = $this->controller->show($card, $activityService);
+        $labelRepository = $this->createStub(LabelRepository::class);
+        $labelRepository->method('findAll')->willReturn([]);
+        $userRepository = $this->createStub(UserRepository::class);
+        $userRepository->method('findAll')->willReturn([]);
+
+        $response = $this->controller->show($card, $activityService, $labelRepository, $userRepository);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
         self::assertSame('<html>show modal</html>', $response->getContent());

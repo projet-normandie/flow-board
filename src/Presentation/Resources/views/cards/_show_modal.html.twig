@@ -4,11 +4,6 @@
         <span class="badge rounded-pill" style="background-color: {{ card.column.board.project.color }};">
             {{ card.column.board.project.name }}
         </span>
-        {% if is_granted('CARD_EDIT', card) %}
-            <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="openAjaxModal('{{ path('app_card_edit_modal', { id: card.id }) }}')">
-                <i class="bi bi-pencil me-1"></i>{{ 'card.show.edit_btn'|trans }}
-            </button>
-        {% endif %}
     </div>
     <button type="button" class="ajax-modal-close" onclick="closeAjaxModal()">&times;</button>
 </div>
@@ -18,99 +13,348 @@
     <div class="card-show-left">
 
         {# Title #}
-        <h4 class="mb-3">{{ card.title }}</h4>
+        {% if is_granted('CARD_EDIT', card) %}
+            <div class="mb-3" data-controller="inline-text"
+                 data-inline-text-url-value="{{ path('app_card_update_title', { id: card.id }) }}"
+                 data-inline-text-csrf-value="{{ csrf_token('update_title' ~ card.id) }}"
+                 data-inline-text-field-value="value">
+                <h4 class="card-title-editable mb-0"
+                    data-inline-text-target="display"
+                    data-action="click->inline-text#startEdit">{{ card.title }}</h4>
+                <textarea class="card-title-input"
+                          data-inline-text-target="input"
+                          data-action="blur->inline-text#handleBlur keydown->inline-text#handleKeydown"
+                          rows="1"
+                          style="display:none;">{{ card.title }}</textarea>
+            </div>
+        {% else %}
+            <h4 class="mb-3">{{ card.title }}</h4>
+        {% endif %}
 
         {# Meta row #}
         <div class="d-flex flex-wrap gap-4 mb-4 pb-3 border-bottom">
             <div>
                 <small class="text-muted d-block mb-1">{{ 'card.assignees'|trans }}</small>
-                {% if card.assignees|length > 0 %}
-                    <div class="avatar-group">
-                        {% for assignee in card.assignees %}
-                            <img class="avatar-circle" src="{{ assignee.email|gravatar }}" alt="{{ assignee.fullName }}" title="{{ assignee.fullName }}">
-                        {% endfor %}
+                {% if is_granted('CARD_EDIT', card) %}
+                    <div data-controller="inline-assignees"
+                         data-inline-assignees-url-value="{{ path('app_card_update_assignees', { id: card.id }) }}"
+                         data-inline-assignees-csrf-value="{{ csrf_token('update_assignees' ~ card.id) }}"
+                         data-inline-assignees-placeholder-value="{{ 'card.show.add_assignees'|trans }}">
+                        <div data-inline-assignees-target="display" class="labels-editable">
+                            {% if card.assignees|length > 0 %}
+                                <div class="avatar-group">
+                                    {% for assignee in card.assignees %}
+                                        <img class="avatar-circle" src="{{ assignee.email|gravatar }}" alt="{{ assignee.fullName }}" title="{{ assignee.fullName }}">
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <span class="card-description-placeholder">{{ 'card.show.add_assignees'|trans }}</span>
+                            {% endif %}
+                        </div>
+                        <div data-inline-assignees-target="editorContainer" style="display:none;">
+                            <select multiple data-inline-assignees-target="select">
+                                {% for user in allUsers %}
+                                    <option value="{{ user.id }}"
+                                            {% if card.assignees.contains(user) %}selected{% endif %}>
+                                        {{ user.fullName }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div data-inline-assignees-target="actions" class="mt-2 gap-2" style="display:none;">
+                            <button type="button" data-action="inline-assignees#save" class="btn btn-sm btn-primary">{{ 'common.save'|trans }}</button>
+                            <button type="button" data-action="inline-assignees#cancel" class="btn btn-sm btn-outline-secondary">{{ 'common.cancel'|trans }}</button>
+                        </div>
                     </div>
                 {% else %}
-                    <span class="text-muted">—</span>
+                    {% if card.assignees|length > 0 %}
+                        <div class="avatar-group">
+                            {% for assignee in card.assignees %}
+                                <img class="avatar-circle" src="{{ assignee.email|gravatar }}" alt="{{ assignee.fullName }}" title="{{ assignee.fullName }}">
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
                 {% endif %}
             </div>
 
-            {% if card.labels|length > 0 %}
-                <div>
-                    <small class="text-muted d-block mb-1">{{ 'card.labels'|trans }}</small>
-                    <div>
+            <div>
+                <small class="text-muted d-block mb-1">{{ 'card.labels'|trans }}</small>
+                {% if is_granted('CARD_EDIT', card) %}
+                    <div data-controller="inline-labels"
+                         data-placeholder="{{ 'card.show.add_labels'|trans }}"
+                         data-inline-labels-url-value="{{ path('app_card_update_labels', { id: card.id }) }}"
+                         data-inline-labels-csrf-value="{{ csrf_token('update_labels' ~ card.id) }}">
+                        <div data-inline-labels-target="display" class="labels-editable">
+                            {% if card.labels|length > 0 %}
+                                {% for label in card.labels %}
+                                    <span class="badge rounded-pill" style="background-color: {{ label.color }};">{{ label.name }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="card-description-placeholder">{{ 'card.show.add_labels'|trans }}</span>
+                            {% endif %}
+                        </div>
+                        <div data-inline-labels-target="editorContainer" style="display:none;">
+                            <select multiple data-inline-labels-target="select">
+                                {% for label in allLabels %}
+                                    <option value="{{ label.id }}"
+                                            data-color="{{ label.color }}"
+                                            {% if card.labels.contains(label) %}selected{% endif %}>
+                                        {{ label.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div data-inline-labels-target="actions" class="mt-2 gap-2" style="display:none;">
+                            <button type="button" data-action="inline-labels#save" class="btn btn-sm btn-primary">{{ 'common.save'|trans }}</button>
+                            <button type="button" data-action="inline-labels#cancel" class="btn btn-sm btn-outline-secondary">{{ 'common.cancel'|trans }}</button>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if card.labels|length > 0 %}
                         {% for label in card.labels %}
                             <span class="badge rounded-pill" style="background-color: {{ label.color }};">{{ label.name }}</span>
                         {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                {% endif %}
+            </div>
 
             <div>
                 <small class="text-muted d-block mb-1">{{ 'card.due_date'|trans }}</small>
-                {% if card.dueDate %}
-                    {% set now = "now"|date("U") %}
-                    {% set due = card.dueDate|date("U") %}
-                    {% set diff_days = ((due - now) / 86400)|round(0, 'floor') %}
-                    <span class="{% if diff_days < 0 %}text-danger fw-bold{% elseif diff_days < 3 %}text-warning fw-bold{% endif %}">
-                        {{ card.dueDate|date('d/m/Y') }}
-                    </span>
+                {% if is_granted('CARD_EDIT', card) %}
+                    <div class="d-inline-flex align-items-center gap-1"
+                         data-controller="inline-date"
+                         data-inline-date-url-value="{{ path('app_card_update_due_date', { id: card.id }) }}"
+                         data-inline-date-csrf-value="{{ csrf_token('update_due_date' ~ card.id) }}"
+                         data-inline-date-current-value="{{ card.dueDate ? card.dueDate|date('Y-m-d') : '' }}"
+                         data-inline-date-placeholder-value="{{ 'card.show.add_due_date'|trans }}">
+                        {% if card.dueDate %}
+                            {% set now = "now"|date("U") %}
+                            {% set due = card.dueDate|date("U") %}
+                            {% set diff_days = ((due - now) / 86400)|round(0, 'floor') %}
+                            <span class="date-editable {% if diff_days < 0 %}text-danger fw-bold{% elseif diff_days < 3 %}text-warning fw-bold{% endif %}"
+                                  data-inline-date-target="display">{{ card.dueDate|date('d/m/Y') }}</span>
+                            <button type="button" class="btn-date-clear" data-inline-date-target="clear" title="{{ 'common.cancel'|trans }}">&times;</button>
+                        {% else %}
+                            <span class="date-editable card-description-placeholder" data-inline-date-target="display">{{ 'card.show.add_due_date'|trans }}</span>
+                            <button type="button" class="btn-date-clear" data-inline-date-target="clear" style="display:none;">&times;</button>
+                        {% endif %}
+                        <input type="date" class="card-date-input" data-inline-date-target="input" style="display:none;">
+                    </div>
                 {% else %}
-                    <span class="text-muted">—</span>
+                    {% if card.dueDate %}
+                        {% set now = "now"|date("U") %}
+                        {% set due = card.dueDate|date("U") %}
+                        {% set diff_days = ((due - now) / 86400)|round(0, 'floor') %}
+                        <span class="{% if diff_days < 0 %}text-danger fw-bold{% elseif diff_days < 3 %}text-warning fw-bold{% endif %}">
+                            {{ card.dueDate|date('d/m/Y') }}
+                        </span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
                 {% endif %}
             </div>
 
             <div>
                 <small class="text-muted d-block mb-1">{{ 'card.priority'|trans }}</small>
-                {% if card.priority %}
-                    <span class="badge card-priority-badge-{{ card.priority.value }}">
-                        {{ ('card.priority.' ~ card.priority.value)|trans }}
-                    </span>
+                {% if is_granted('CARD_EDIT', card) %}
+                    {% set priority_labels = {
+                        low: 'card.priority.low'|trans,
+                        medium: 'card.priority.medium'|trans,
+                        high: 'card.priority.high'|trans,
+                        critical: 'card.priority.critical'|trans
+                    } %}
+                    <div class="position-relative d-inline-block"
+                         data-controller="inline-priority"
+                         data-inline-priority-url-value="{{ path('app_card_update_priority', { id: card.id }) }}"
+                         data-inline-priority-csrf-value="{{ csrf_token('update_priority' ~ card.id) }}"
+                         data-inline-priority-current-value="{{ card.priority ? card.priority.value : '' }}"
+                         data-inline-priority-labels-value="{{ priority_labels|json_encode }}">
+                        <span class="priority-editable {% if card.priority %}badge card-priority-badge-{{ card.priority.value }}{% else %}text-muted{% endif %}"
+                              data-inline-priority-target="badge">
+                            {% if card.priority %}{{ ('card.priority.' ~ card.priority.value)|trans }}{% else %}—{% endif %}
+                        </span>
+                    </div>
                 {% else %}
-                    <span class="text-muted">—</span>
+                    {% if card.priority %}
+                        <span class="badge card-priority-badge-{{ card.priority.value }}">
+                            {{ ('card.priority.' ~ card.priority.value)|trans }}
+                        </span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
                 {% endif %}
             </div>
 
-            {% if card.reportedBy %}
-                <div>
-                    <small class="text-muted d-block mb-1">{{ 'card.reported_by'|trans }}</small>
-                    <span>{{ card.reportedBy }}</span>
-                </div>
-            {% endif %}
+            <div>
+                <small class="text-muted d-block mb-1">{{ 'card.reported_by'|trans }}</small>
+                {% if is_granted('CARD_EDIT', card) %}
+                    <div data-controller="inline-text"
+                         data-inline-text-url-value="{{ path('app_card_update_reported_by', { id: card.id }) }}"
+                         data-inline-text-csrf-value="{{ csrf_token('update_reported_by' ~ card.id) }}"
+                         data-inline-text-allow-empty-value="true"
+                         data-inline-text-placeholder-value="{{ 'card.show.add_reported_by'|trans }}">
+                        <span class="card-text-editable {% if not card.reportedBy %}card-description-placeholder{% endif %}"
+                              data-inline-text-target="display"
+                              data-action="click->inline-text#startEdit">{{ card.reportedBy ?: 'card.show.add_reported_by'|trans }}</span>
+                        <textarea class="card-inline-input"
+                                  data-inline-text-target="input"
+                                  data-action="blur->inline-text#handleBlur keydown->inline-text#handleKeydown"
+                                  rows="1"
+                                  style="display:none;">{{ card.reportedBy }}</textarea>
+                    </div>
+                {% else %}
+                    {% if card.reportedBy %}
+                        <span>{{ card.reportedBy }}</span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
 
         {# Description #}
         <div class="mb-4">
             <h6 class="text-muted mb-2"><i class="bi bi-text-left me-1"></i>{{ 'card.description'|trans }}</h6>
-            {% if card.description %}
-                <div class="card-description ql-editor">{{ card.description|raw }}</div>
+            {% if is_granted('CARD_EDIT', card) %}
+                <div data-controller="inline-description"
+                     data-inline-description-url-value="{{ path('app_card_update_description', { id: card.id }) }}"
+                     data-inline-description-csrf-value="{{ csrf_token('update_description' ~ card.id) }}"
+                     data-inline-description-html-value="{{ card.description|default('')|e('html_attr') }}"
+                     data-inline-description-placeholder-value="{{ 'card.show.add_description'|trans }}">
+                    <div data-inline-description-target="display" class="card-description-editable">
+                        {% if card.description %}
+                            <div class="card-description ql-editor">{{ card.description|raw }}</div>
+                        {% else %}
+                            <p class="card-description-placeholder">{{ 'card.show.add_description'|trans }}</p>
+                        {% endif %}
+                    </div>
+                    <div data-inline-description-target="editorContainer" style="display:none;">
+                        <div data-inline-description-target="quillDiv" style="min-height:150px;"></div>
+                    </div>
+                    <div data-inline-description-target="actions" class="mt-2 gap-2" style="display:none;">
+                        <button type="button" data-action="inline-description#save" class="btn btn-sm btn-primary">
+                            {{ 'common.save'|trans }}
+                        </button>
+                        <button type="button" data-action="inline-description#cancel" class="btn btn-sm btn-outline-secondary">
+                            {{ 'common.cancel'|trans }}
+                        </button>
+                    </div>
+                </div>
             {% else %}
-                <p class="text-muted fst-italic">{{ 'card.show.no_description'|trans }}</p>
+                {% if card.description %}
+                    <div class="card-description ql-editor">{{ card.description|raw }}</div>
+                {% else %}
+                    <p class="text-muted fst-italic">{{ 'card.show.no_description'|trans }}</p>
+                {% endif %}
             {% endif %}
         </div>
 
         {# Checklists #}
-        {% if card.checklists|length > 0 %}
+        {% if card.checklists|length > 0 or is_granted('CARD_EDIT', card) %}
             <div class="mb-4">
+                <h6 class="text-muted mb-2"><i class="bi bi-check2-square me-1"></i>{{ 'checklist.title'|trans }}</h6>
+
                 {% for checklist in card.checklists %}
-                    <div class="mb-3">
+                    <div class="mb-3"
+                         data-controller="checklist-progress"
+                         data-checklist-progress-total-value="{{ checklist.totalCount }}">
                         <div class="d-flex align-items-center justify-content-between mb-1">
-                            <h6 class="mb-0"><i class="bi bi-check2-square me-1"></i>{{ checklist.title }}</h6>
-                            <small class="text-muted">{{ checklist.checkedCount }}/{{ checklist.totalCount }}</small>
+                            {% if is_granted('CARD_EDIT', card) %}
+                                <div data-controller="inline-text"
+                                     data-inline-text-url-value="{{ path('app_checklist_update_title', { id: checklist.id }) }}"
+                                     data-inline-text-csrf-value="{{ csrf_token('update_checklist_title' ~ checklist.id) }}"
+                                     data-inline-text-field-value="value">
+                                    <strong class="small card-text-editable"
+                                            data-inline-text-target="display"
+                                            data-action="click->inline-text#startEdit">{{ checklist.title }}</strong>
+                                    <textarea class="card-inline-input fw-bold"
+                                              data-inline-text-target="input"
+                                              data-action="blur->inline-text#handleBlur keydown->inline-text#handleKeydown"
+                                              rows="1"
+                                              style="display:none;">{{ checklist.title }}</textarea>
+                                </div>
+                            {% else %}
+                                <strong class="small">{{ checklist.title }}</strong>
+                            {% endif %}
+                            <small class="text-muted" data-checklist-progress-target="counter">{{ checklist.checkedCount }}/{{ checklist.totalCount }}</small>
                         </div>
                         {% if checklist.totalCount > 0 %}
                             <div class="progress mb-2" style="height: 6px;">
-                                <div class="progress-bar" style="width: {{ (checklist.checkedCount / checklist.totalCount * 100)|round }}%;"></div>
+                                <div class="progress-bar"
+                                     data-checklist-progress-target="progressBar"
+                                     style="width: {{ checklist.totalCount > 0 ? (checklist.checkedCount / checklist.totalCount * 100)|round : 0 }}%;"></div>
                             </div>
                         {% endif %}
+
                         {% for item in checklist.items %}
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <i class="bi {{ item.checked ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted' }}"></i>
-                                <span class="{{ item.checked ? 'text-decoration-line-through text-muted' : '' }}">{{ item.title }}</span>
+                            <div class="d-flex align-items-center gap-2 mb-1 checklist-item-row">
+                                {% if is_granted('CARD_EDIT', card) %}
+                                    <input type="checkbox"
+                                           class="form-check-input mt-0 flex-shrink-0"
+                                           {% if item.checked %}checked{% endif %}
+                                           data-action="change->checklist-progress#toggle"
+                                           data-url="{{ path('app_checklist_item_toggle', { id: item.id }) }}"
+                                           data-csrf="{{ csrf_token('toggle_item' ~ item.id) }}">
+                                    <div class="flex-grow-1"
+                                         data-controller="inline-text"
+                                         data-inline-text-url-value="{{ path('app_checklist_item_update_title', { id: item.id }) }}"
+                                         data-inline-text-csrf-value="{{ csrf_token('update_item_title' ~ item.id) }}"
+                                         data-inline-text-field-value="value">
+                                        <span class="checklist-item-label card-text-editable {{ item.checked ? 'text-decoration-line-through text-muted' : '' }}"
+                                              data-inline-text-target="display"
+                                              data-action="click->inline-text#startEdit">{{ item.title }}</span>
+                                        <textarea class="card-inline-input"
+                                                  data-inline-text-target="input"
+                                                  data-action="blur->inline-text#handleBlur keydown->inline-text#handleKeydown"
+                                                  rows="1"
+                                                  style="display:none;">{{ item.title }}</textarea>
+                                    </div>
+                                {% else %}
+                                    <i class="bi {{ item.checked ? 'bi-check-circle-fill text-success' : 'bi-circle text-muted' }} flex-shrink-0"></i>
+                                    <span class="checklist-item-label {{ item.checked ? 'text-decoration-line-through text-muted' : '' }}">{{ item.title }}</span>
+                                {% endif %}
                             </div>
                         {% endfor %}
+
+                        {% if is_granted('CARD_EDIT', card) %}
+                            <details class="mt-1">
+                                <summary class="text-muted small" style="cursor:pointer; list-style:none;">
+                                    <i class="bi bi-plus me-1"></i>{{ 'checklist.add_item'|trans }}
+                                </summary>
+                                <form data-ajax-form
+                                      action="{{ path('app_checklist_item_create', { id: checklist.id }) }}"
+                                      method="POST"
+                                      class="d-flex gap-2 mt-2">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('create_item' ~ checklist.id) }}">
+                                    <input type="text" name="title" class="form-control form-control-sm"
+                                           placeholder="{{ 'checklist.item.placeholder'|trans }}" required autofocus>
+                                    <button type="submit" class="btn btn-sm btn-primary">{{ 'common.save'|trans }}</button>
+                                </form>
+                            </details>
+                        {% endif %}
                     </div>
                 {% endfor %}
+
+                {% if is_granted('CARD_EDIT', card) %}
+                    <details class="mt-2">
+                        <summary class="text-muted small" style="cursor:pointer; list-style:none;">
+                            <i class="bi bi-plus-circle me-1"></i>{{ 'checklist.add'|trans }}
+                        </summary>
+                        <form data-ajax-form
+                              action="{{ path('app_card_checklist_create', { id: card.id }) }}"
+                              method="POST"
+                              class="d-flex gap-2 mt-2">
+                            <input type="hidden" name="_token" value="{{ csrf_token('create_checklist' ~ card.id) }}">
+                            <input type="text" name="title" class="form-control form-control-sm"
+                                   placeholder="{{ 'checklist.title.placeholder'|trans }}" required>
+                            <button type="submit" class="btn btn-sm btn-primary">{{ 'common.save'|trans }}</button>
+                        </form>
+                    </details>
+                {% endif %}
             </div>
         {% endif %}
 

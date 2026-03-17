@@ -473,6 +473,191 @@ body {
     overflow: hidden;
 }
 
+// Inline title editing (Trello-style)
+.card-title-editable {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: -6px;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background-color: rgba(var(--bs-secondary-rgb), 0.12);
+    }
+}
+
+.card-title-input {
+    display: block;
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--bs-body-color);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--bs-primary);
+    border-radius: 0;
+    padding: 2px 0;
+    resize: none;
+    overflow: hidden;
+    outline: none;
+    font-family: inherit;
+}
+
+// Inline labels editing
+.labels-editable {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin-left: -4px;
+    min-height: 26px;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background-color: rgba(var(--bs-secondary-rgb), 0.12);
+    }
+}
+
+// Inline date editing
+.date-editable {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 1px 4px;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background-color: rgba(var(--bs-secondary-rgb), 0.12);
+    }
+}
+
+.card-date-input {
+    font-size: 0.875rem;
+    color: var(--bs-body-color);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--bs-primary);
+    border-radius: 0;
+    padding: 1px 2px;
+    outline: none;
+
+    &::-webkit-calendar-picker-indicator {
+        filter: var(--bs-body-color, invert(1));
+        cursor: pointer;
+        opacity: 0.7;
+    }
+}
+
+.btn-date-clear {
+    background: none;
+    border: none;
+    color: var(--bs-secondary-color);
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0 2px;
+    cursor: pointer;
+    opacity: 0.6;
+
+    &:hover {
+        opacity: 1;
+        color: var(--bs-danger);
+    }
+}
+
+// Generic inline text editable span
+.card-text-editable {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 1px 4px;
+    margin-left: -4px;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background-color: rgba(var(--bs-secondary-rgb), 0.12);
+    }
+}
+
+// Shared inline input style (for reportedBy and other short text fields)
+.card-inline-input {
+    display: block;
+    width: 100%;
+    font-size: 0.9375rem;
+    color: var(--bs-body-color);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--bs-primary);
+    border-radius: 0;
+    padding: 1px 0;
+    resize: none;
+    overflow: hidden;
+    outline: none;
+    font-family: inherit;
+}
+
+// Inline priority editing
+.priority-editable {
+    cursor: pointer;
+    transition: opacity 0.15s;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.priority-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 200;
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 6px;
+    padding: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 140px;
+}
+
+.priority-dropdown-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: transparent;
+    transition: opacity 0.15s;
+
+    &:hover {
+        opacity: 0.75;
+    }
+}
+
+// Inline description editing (Trello-style)
+.card-description-editable {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: -6px -8px;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background-color: rgba(var(--bs-secondary-rgb), 0.12);
+    }
+}
+
+.card-description-placeholder {
+    color: var(--bs-secondary-color);
+    font-style: italic;
+    min-height: 36px;
+    margin-bottom: 0;
+}
+
 // Card show — left scrollable panel
 .card-show-left {
     flex: 1;

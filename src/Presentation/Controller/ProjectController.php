@@ -145,7 +145,6 @@ class ProjectController extends AbstractController
                     'assignees' => $assignees,
                     'canEdit' => $this->isGranted(CardVoter::EDIT, $card),
                     'showUrl' => $urlGenerator->generate('app_card_show', ['id' => $card->getId()]),
-                    'editUrl' => $urlGenerator->generate('app_card_edit_modal', ['id' => $card->getId()]),
                     'commentsCount' => $card->getComments()->count(),
                     'moveUrl' => $urlGenerator->generate('app_card_move', ['id' => $card->getId()]),
                 ];

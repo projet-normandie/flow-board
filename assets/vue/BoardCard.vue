@@ -13,14 +13,6 @@
                         @click.prevent="openAjaxModal(card.showUrl)"
                     >{{ card.title }}</a>
                 </h6>
-                <button
-                    v-if="card.canEdit"
-                    type="button"
-                    class="btn btn-sm btn-link text-muted p-0 flex-shrink-0"
-                    @click.stop="openAjaxModal(card.editUrl)"
-                >
-                    <i class="bi bi-pencil"></i>
-                </button>
             </div>
 
             <div v-if="card.labels.length > 0" class="mb-1 d-flex flex-wrap gap-1">
