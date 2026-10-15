@@ -2,7 +2,7 @@ Reprise de la feature : $ARGUMENTS
 
 La migration de cette feature a déjà été jouée en local. Règles strictes pour cette session :
 
-- Ne jamais exécuter de commande Git, quelle que soit la situation
+- git add, git commit et git push sont autorisés
 - Ne PAS créer de nouvelle migration
 
 Si le schéma doit changer :

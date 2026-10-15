@@ -2,7 +2,7 @@ Nouvelle feature démarrée : $ARGUMENTS
 
 On part de zéro sur cette feature. Règles pour toute la session :
 
-- Ne jamais exécuter de commande Git, quelle que soit la situation
+- git add, git commit et git push sont autorisés
 - Si une migration est créée, elle n'est pas encore jouée
 - Ne pas créer plusieurs migrations, modifier toujours la dernière
 - Avant toute action sur le schéma : `php bin/console doctrine:migrations:status`
