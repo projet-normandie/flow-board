@@ -31,3 +31,5 @@ phpstan.neon
 ###> PHPSTORM ###
 /.idea
 ###< PHPSTORM ###
+
+/.claude/feature-status/
