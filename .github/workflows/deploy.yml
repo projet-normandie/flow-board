@@ -54,4 +54,4 @@ jobs:
                     --exclude='var/' \
                     --exclude='.env.local' \
                     ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
-                  ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.DEPLOY_PATH }} && php bin/console cache:clear && php bin/console doctrine:migrations:migrate --no-interaction"
+                  ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.DEPLOY_PATH }} && rm -rf var/cache/prod && php bin/console cache:clear && php bin/console doctrine:migrations:migrate --no-interaction"

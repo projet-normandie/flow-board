@@ -7,20 +7,20 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "damienharper/auditor-bundle": "^7.2.1",
-        "doctrine/doctrine-bundle": "^3.3.2",
+        "damienharper/auditor-bundle": "^7.2.2",
+        "doctrine/doctrine-bundle": "^3.4.2",
         "doctrine/doctrine-migrations-bundle": "^4.0.1",
-        "doctrine/orm": "^3.7.5",
-        "easycorp/easyadmin-bundle": "^5.7",
+        "doctrine/orm": "^3.8.0",
+        "easycorp/easyadmin-bundle": "^5.10.2",
         "phpdocumentor/reflection-docblock": "^5.6.7",
-        "phpstan/phpdoc-parser": "^2.3.6",
+        "phpstan/phpdoc-parser": "^2.4.1",
         "stof/doctrine-extensions-bundle": "^1.15.3",
         "symfony/asset": "8.1.*",
         "symfony/console": "8.1.*",
         "symfony/doctrine-messenger": "8.1.*",
         "symfony/dotenv": "8.1.*",
         "symfony/expression-language": "8.1.*",
-        "symfony/flex": "^2.11",
+        "symfony/flex": "^2.12",
         "symfony/form": "8.1.*",
         "symfony/framework-bundle": "8.1.*",
         "symfony/http-client": "8.1.*",
@@ -42,7 +42,7 @@
         "symfony/ux-turbo": "^2.36",
         "symfony/validator": "8.1.*",
         "symfony/web-link": "8.1.*",
-        "symfony/webpack-encore-bundle": "^2.4.2",
+        "symfony/webpack-encore-bundle": "^2.4.3",
         "symfony/yaml": "8.1.*",
         "twig/extra-bundle": "^2.12|^3.29",
         "twig/string-extra": "^3.24",
@@ -54,6 +54,9 @@
             "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
+        },
+        "audit": {
+            "abandoned": "report"
         },
         "bump-after-update": true,
         "sort-packages": true
@@ -105,10 +108,10 @@
         "doctrine/doctrine-fixtures-bundle": "^4.3.1",
         "fakerphp/faker": "^1.24.1",
         "phpstan/extension-installer": "^1.4.3",
-        "phpstan/phpstan": "^2.3.1",
-        "phpstan/phpstan-doctrine": "^2.0.28",
-        "phpstan/phpstan-symfony": "^2.1",
-        "phpunit/phpunit": "^13.4.2",
+        "phpstan/phpstan": "^2.3.7",
+        "phpstan/phpstan-doctrine": "^2.1.2",
+        "phpstan/phpstan-symfony": "^2.1.1",
+        "phpunit/phpunit": "^13.4.8",
         "squizlabs/php_codesniffer": "^4.0.4",
         "symfony/browser-kit": "8.1.*",
         "symfony/css-selector": "8.1.*",
@@ -116,6 +119,6 @@
         "symfony/maker-bundle": "^1.68",
         "symfony/stopwatch": "8.1.*",
         "symfony/web-profiler-bundle": "8.1.*",
-        "zenstruck/foundry": "^2.14.1"
+        "zenstruck/foundry": "^2.17.0"
     }
 }
