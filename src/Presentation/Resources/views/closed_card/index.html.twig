@@ -1,0 +1,51 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}{{ 'closed_card.title'|trans }} — FlowBoard{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message|trans }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    <h1>
+        <i class="bi bi-check2-circle me-2"></i>{{ 'closed_card.title'|trans }}
+    </h1>
+
+    {% if cards|length > 0 %}
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>{{ 'card.title_field'|trans }}</th>
+                    <th>{{ 'card.project'|trans }}</th>
+                    <th>{{ 'card.column'|trans }}</th>
+                    <th>{{ 'closed_card.closed_at'|trans }}</th>
+                    <th>{{ 'common.actions'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for card in cards %}
+                    <tr>
+                        <td>{{ card.title }}</td>
+                        <td>
+                            <span class="badge rounded-pill" style="background-color: {{ card.column.board.project.color }};">
+                                {{ card.column.board.project.name }}
+                            </span>
+                        </td>
+                        <td>{{ card.column.name }}</td>
+                        <td>{{ card.closedAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% include '@App/closed_card/_reopen_form.html.twig' %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">{{ 'closed_card.empty'|trans }}</p>
+    {% endif %}
+</div>
+{% endblock %}

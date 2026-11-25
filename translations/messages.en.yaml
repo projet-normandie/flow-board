@@ -110,10 +110,14 @@ card.placeholder.select: "— Select —"
 card.flash.created: Card created successfully.
 card.flash.updated: Card updated successfully.
 card.flash.deleted: Card deleted successfully.
+card.flash.closed: Card closed successfully.
+card.flash.reopened: Card reopened successfully.
 card.confirm_delete: Are you sure you want to delete this card?
+card.confirm_close: Are you sure you want to close this card?
 card.show.no_description: No description.
 card.show.author: Author
 card.show.edit_btn: Edit
+card.show.close_btn: Close
 card.show.created_on: "Created on %date%"
 card.priority.low: Low
 card.priority.medium: Medium
@@ -152,6 +156,13 @@ archive.restore: Restore
 archive.flash.restored: Card restored successfully.
 archive.confirm_restore: Are you sure you want to restore this card?
 
+# Closed cards
+closed_card.title: Closed cards
+closed_card.empty: No closed cards.
+closed_card.closed_at: Closed at
+closed_card.reopen: Reopen
+closed_card.confirm_reopen: Are you sure you want to reopen this card?
+
 # Admin
 admin.title: Administration
 admin.dashboard: Dashboard
@@ -170,6 +181,7 @@ theme.toggle: Toggle theme
 # Navigation (extra)
 nav.board: Board
 nav.archive: Archive
+nav.closed_cards: Closed cards
 nav.login_history: Login history
 nav.back_to_site: Back to site
 
@@ -207,6 +219,8 @@ activity.system: System
 activity.on_card: "on"
 activity.card.created: created this card
 activity.card.archived: archived this card
+activity.card.closed: closed this card
+activity.card.reopened: reopened this card
 activity.card.title_changed: "renamed this card to \"%new%\""
 activity.card.description_changed: updated the description
 activity.card.priority_changed: "changed priority to %value%"

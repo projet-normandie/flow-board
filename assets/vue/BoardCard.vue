@@ -21,6 +21,15 @@
                 >
                     <i class="bi bi-pencil"></i>
                 </button>
+                <button
+                    v-if="card.canEdit"
+                    type="button"
+                    class="btn btn-sm btn-link text-muted p-0 flex-shrink-0"
+                    :title="closeLabel"
+                    @click.stop="$emit('close', card)"
+                >
+                    <i class="bi bi-check2-circle"></i>
+                </button>
             </div>
 
             <div v-if="card.labels.length > 0" class="mb-1 d-flex flex-wrap gap-1">
@@ -80,7 +89,11 @@ export default defineComponent({
         card: { type: Object, required: true },
     },
 
+    emits: ['close'],
+
     setup(props) {
+        const closeLabel = 'Clôturer la carte';
+
         const priorityClass = computed(() =>
             `card-priority-${props.card.priority ?? 'none'}`
         );
@@ -99,7 +112,7 @@ export default defineComponent({
 
         const openAjaxModal = (url) => window.openAjaxModal(url);
 
-        return { priorityClass, priorityLabel, dueDateClass, openAjaxModal };
+        return { priorityClass, priorityLabel, dueDateClass, openAjaxModal, closeLabel };
     },
 });
 </script>

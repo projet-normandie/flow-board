@@ -18,7 +18,7 @@
             @change="onCardsChange"
         >
             <template #item="{ element: card }">
-                <BoardCard :card="card" />
+                <BoardCard :card="card" @close="closeCard" />
             </template>
         </draggable>
 
@@ -80,9 +80,34 @@ export default defineComponent({
             }
         }
 
+        async function closeCard(card) {
+            const previousCards = localCards.value;
+            localCards.value = previousCards.filter((c) => c.id !== card.id);
+
+            try {
+                const formData = new FormData();
+                formData.set('_token', card.closeToken);
+                formData.set('silent', '1');
+
+                const response = await fetch(card.closeUrl, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    credentials: 'same-origin',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Request failed');
+                }
+            } catch (error) {
+                console.error('Error closing card:', error);
+                localCards.value = previousCards;
+            }
+        }
+
         const openAjaxModal = (url) => window.openAjaxModal(url);
 
-        return { localCards, onCardsChange, openAjaxModal };
+        return { localCards, onCardsChange, closeCard, openAjaxModal };
     },
 });
 </script>

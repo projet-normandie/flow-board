@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
@@ -49,6 +50,7 @@ class ProjectController extends AbstractController
         CardRepository $cardRepository,
         LabelRepository $labelRepository,
         UrlGeneratorInterface $urlGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager,
     ): Response {
         $board = $boardRepository->find($boardId);
 
@@ -82,7 +84,7 @@ class ProjectController extends AbstractController
 
         $boards = $boardRepository->findByProject($project);
 
-        $boardJson = $this->buildBoardJson($board->getColumns()->toArray(), $cardsByColumn, $urlGenerator);
+        $boardJson = $this->buildBoardJson($board->getColumns()->toArray(), $cardsByColumn, $urlGenerator, $csrfTokenManager);
 
         return $this->render('@App/project/board.html.twig', [
             'project' => $project,
@@ -101,14 +103,18 @@ class ProjectController extends AbstractController
      * @param \App\Domain\Entity\Column[] $columns
      * @param array<int, Card[]> $cardsByColumn
      */
-    private function buildBoardJson(array $columns, array $cardsByColumn, UrlGeneratorInterface $urlGenerator): string
-    {
+    private function buildBoardJson(
+        array $columns,
+        array $cardsByColumn,
+        UrlGeneratorInterface $urlGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager,
+    ): string {
         $now = new \DateTimeImmutable();
 
-        $columnsData = array_map(function (\App\Domain\Entity\Column $column) use ($cardsByColumn, $urlGenerator, $now): array {
+        $columnsData = array_map(function (\App\Domain\Entity\Column $column) use ($cardsByColumn, $urlGenerator, $csrfTokenManager, $now): array {
             $cards = $cardsByColumn[$column->getId() ?? 0] ?? [];
 
-            $cardsData = array_map(function (Card $card) use ($urlGenerator, $now): array {
+            $cardsData = array_map(function (Card $card) use ($urlGenerator, $csrfTokenManager, $now): array {
                 $dueDate = $card->getDueDate();
                 $dueDateDiffDays = null;
                 $dueDateFormatted = null;
@@ -148,6 +154,8 @@ class ProjectController extends AbstractController
                     'editUrl' => $urlGenerator->generate('app_card_edit_modal', ['id' => $card->getId()]),
                     'commentsCount' => $card->getComments()->count(),
                     'moveUrl' => $urlGenerator->generate('app_card_move', ['id' => $card->getId()]),
+                    'closeUrl' => $urlGenerator->generate('app_card_close', ['id' => $card->getId()]),
+                    'closeToken' => $csrfTokenManager->getToken('close' . $card->getId())->getValue(),
                 ];
             }, $cards);
 

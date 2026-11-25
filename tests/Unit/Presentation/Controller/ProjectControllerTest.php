@@ -21,6 +21,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment;
 
 final class ProjectControllerTest extends TestCase
@@ -28,12 +30,15 @@ final class ProjectControllerTest extends TestCase
     private ProjectController $controller;
     private Stub&Environment $twig;
     private Stub&UrlGeneratorInterface $urlGenerator;
+    private Stub&CsrfTokenManagerInterface $csrfTokenManager;
     private Container $container;
 
     protected function setUp(): void
     {
         $this->twig = $this->createStub(Environment::class);
         $this->urlGenerator = $this->createStub(UrlGeneratorInterface::class);
+        $this->csrfTokenManager = $this->createStub(CsrfTokenManagerInterface::class);
+        $this->csrfTokenManager->method('getToken')->willReturn(new CsrfToken('close', 'dummy-token-value'));
 
         $this->controller = new ProjectController();
 
@@ -142,6 +147,7 @@ final class ProjectControllerTest extends TestCase
             $cardRepository,
             $labelRepository,
             $this->urlGenerator,
+            $this->csrfTokenManager,
         );
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -161,7 +167,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board(new Request(), $project, 999, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator);
+        $this->controller->board(new Request(), $project, 999, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator, $this->csrfTokenManager);
     }
 
     public function testBoardThrowsNotFoundWhenBoardBelongsToDifferentProject(): void
@@ -184,7 +190,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator);
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator, $this->csrfTokenManager);
     }
 
     public function testBoardGroupsCardsByColumn(): void
@@ -248,7 +254,7 @@ final class ProjectControllerTest extends TestCase
 
         $this->urlGenerator->method('generate')->willReturn('/some/url');
 
-        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator);
+        $this->controller->board(new Request(), $project, 5, $boardRepository, $cardRepository, $labelRepository, $this->urlGenerator, $this->csrfTokenManager);
     }
 
     private function setEntityId(object $entity, int $id): void

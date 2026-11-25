@@ -201,4 +201,61 @@ class CardController extends AbstractController
 
         return new JsonResponse(['success' => true]);
     }
+
+    #[Route('/{id}/close', name: 'app_card_close', methods: ['POST'])]
+    public function close(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+    ): Response {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+        /** @var Column $column */
+        $column = $card->getColumn();
+        $board = $column->getBoard();
+        $redirectUrl = $this->generateUrl('app_project_board', [
+            'id' => $board->getProject()->getId(),
+            'boardId' => $board->getId(),
+        ]);
+
+        if ($this->isCsrfTokenValid('close' . $card->getId(), $token)) {
+            $card->setClosedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+
+            if (!$request->request->getBoolean('silent')) {
+                $this->addFlash('success', 'card.flash.closed');
+            }
+        }
+
+        if ($request->isXmlHttpRequest() || $request->headers->get('X-Requested-With') === 'XMLHttpRequest') {
+            return new JsonResponse(['success' => true, 'redirect' => $redirectUrl]);
+        }
+
+        return $this->redirect($redirectUrl);
+    }
+
+    #[Route('/{id}/reopen', name: 'app_card_reopen', methods: ['POST'])]
+    public function reopen(
+        Request $request,
+        Card $card,
+        EntityManagerInterface $entityManager,
+        CardRepository $cardRepository,
+    ): Response {
+        $this->denyAccessUnlessGranted(CardVoter::EDIT, $card);
+
+        $token = $request->request->getString('_token');
+
+        if ($this->isCsrfTokenValid('reopen' . $card->getId(), $token)) {
+            /** @var Column $column */
+            $column = $card->getColumn();
+            $card->setClosedAt(null);
+            $card->setPosition($cardRepository->getNextPositionInColumn($column));
+            $entityManager->flush();
+
+            $this->addFlash('success', 'card.flash.reopened');
+        }
+
+        return $this->redirectToRoute('app_closed_card_index');
+    }
 }

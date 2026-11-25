@@ -251,9 +251,38 @@ class ActivityService
                 $userEmail,
                 $createdAt,
             ),
+            'closedAt' => $this->buildClosedAtItem(
+                $diff,
+                $username,
+                $userEmail,
+                $createdAt,
+            ),
             'position' => null,
             default => null,
         };
+    }
+
+    /**
+     * @param array<string, mixed> $diff
+     */
+    private function buildClosedAtItem(
+        array $diff,
+        string $username,
+        string $userEmail,
+        \DateTimeImmutable $createdAt,
+    ): ActivityItem {
+        $isClosing = ($diff['new'] ?? null) !== null;
+
+        return new ActivityItem(
+            activityType: ActivityType::Audit,
+            occurredAt: $createdAt,
+            username: $username,
+            userEmail: $userEmail,
+            auditAction: 'update',
+            translationKey: $isClosing ? 'activity.card.closed' : 'activity.card.reopened',
+            translationParams: [],
+            iconClass: $isClosing ? 'bi-check2-circle' : 'bi-arrow-counterclockwise',
+        );
     }
 
     private function buildColumnMoveItem(

@@ -74,6 +74,9 @@ class Card
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $closedAt = null;
+
     public function __construct()
     {
         $this->labels = new ArrayCollection();
@@ -274,5 +277,22 @@ class Card
         $this->deletedAt = $deletedAt;
 
         return $this;
+    }
+
+    public function getClosedAt(): ?\DateTimeImmutable
+    {
+        return $this->closedAt;
+    }
+
+    public function setClosedAt(?\DateTimeImmutable $closedAt): static
+    {
+        $this->closedAt = $closedAt;
+
+        return $this;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closedAt !== null;
     }
 }

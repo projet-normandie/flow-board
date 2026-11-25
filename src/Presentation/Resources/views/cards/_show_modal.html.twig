@@ -8,6 +8,12 @@
             <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="openAjaxModal('{{ path('app_card_edit_modal', { id: card.id }) }}')">
                 <i class="bi bi-pencil me-1"></i>{{ 'card.show.edit_btn'|trans }}
             </button>
+            <form data-ajax-form data-confirm="{{ 'card.confirm_close'|trans }}" action="{{ path('app_card_close', { id: card.id }) }}" method="POST" class="d-inline ms-2">
+                <input type="hidden" name="_token" value="{{ csrf_token('close' ~ card.id) }}">
+                <button type="submit" class="btn btn-sm btn-outline-success">
+                    <i class="bi bi-check2-circle me-1"></i>{{ 'card.show.close_btn'|trans }}
+                </button>
+            </form>
         {% endif %}
     </div>
     <button type="button" class="ajax-modal-close" onclick="closeAjaxModal()">&times;</button>

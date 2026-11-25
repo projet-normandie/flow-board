@@ -110,10 +110,14 @@ card.placeholder.select: "— Sélectionner —"
 card.flash.created: Carte créée avec succès.
 card.flash.updated: Carte modifiée avec succès.
 card.flash.deleted: Carte supprimée avec succès.
+card.flash.closed: Carte clôturée avec succès.
+card.flash.reopened: Carte rouverte avec succès.
 card.confirm_delete: Êtes-vous sûr de vouloir supprimer cette carte ?
+card.confirm_close: Êtes-vous sûr de vouloir clôturer cette carte ?
 card.show.no_description: Aucune description.
 card.show.author: Auteur
 card.show.edit_btn: Modifier
+card.show.close_btn: Clôturer
 card.show.created_on: "Créé le %date%"
 card.priority.low: Basse
 card.priority.medium: Moyenne
@@ -152,6 +156,13 @@ archive.restore: Restaurer
 archive.flash.restored: Carte restaurée avec succès.
 archive.confirm_restore: Êtes-vous sûr de vouloir restaurer cette carte ?
 
+# Closed cards
+closed_card.title: Cards clôturées
+closed_card.empty: Aucune carte clôturée.
+closed_card.closed_at: Clôturée le
+closed_card.reopen: Rouvrir
+closed_card.confirm_reopen: Êtes-vous sûr de vouloir rouvrir cette carte ?
+
 # Admin
 admin.title: Administration
 admin.dashboard: Tableau de bord
@@ -170,6 +181,7 @@ theme.toggle: Changer le thème
 # Navigation (extra)
 nav.board: Tableau
 nav.archive: Archive
+nav.closed_cards: Cards clôturées
 nav.login_history: Historique connexions
 nav.back_to_site: Retour au site
 
@@ -207,6 +219,8 @@ activity.system: Système
 activity.on_card: "sur"
 activity.card.created: a créé cette carte
 activity.card.archived: a archivé cette carte
+activity.card.closed: a clôturé cette carte
+activity.card.reopened: a rouvert cette carte
 activity.card.title_changed: "a renommé cette carte en « %new% »"
 activity.card.description_changed: a modifié la description
 activity.card.priority_changed: "a changé la priorité en %value%"

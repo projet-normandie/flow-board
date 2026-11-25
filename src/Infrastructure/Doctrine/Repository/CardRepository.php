@@ -47,6 +47,7 @@ class CardRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c')
             ->join('c.column', 'col')
             ->where('col.board = :board')
+            ->andWhere('c.closedAt IS NULL')
             ->setParameter('board', $board)
             ->leftJoin('c.labels', 'l')->addSelect('l')
             ->leftJoin('c.assignees', 'u')->addSelect('u')
@@ -96,6 +97,21 @@ class CardRepository extends ServiceEntityRepository
         if ($filtersEnabled) {
             $filters->enable('softdeleteable');
         }
+
+        return $cards;
+    }
+
+    /**
+     * @return Card[]
+     */
+    public function findClosedCards(): array
+    {
+        /** @var Card[] $cards */
+        $cards = $this->createQueryBuilder('c')
+            ->where('c.closedAt IS NOT NULL')
+            ->orderBy('c.closedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
 
         return $cards;
     }
