@@ -106,6 +106,13 @@ assets-compile: ## Compile les assets dans le répertoire public
 	php bin/console asset-map:compile
 
 ##
+## Messenger
+##---------------------------------------------------------------------------
+
+worker: ## Lance le worker Messenger (consomme la queue async : emails, notifications...)
+	$(CONSOLE_BIN) messenger:consume async -vv
+
+##
 ## Serveur de développement
 ##---------------------------------------------------------------------------
 

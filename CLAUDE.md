@@ -33,6 +33,9 @@ npm run build              # Production build
 # Dev server
 make serve                 # Start Symfony server + npm run watch
 make serve-stop            # Stop server
+
+# Messenger
+make worker                 # Consume the async transport (emails, notifications...) — run in a separate terminal during dev
 ```
 
 ## Architecture

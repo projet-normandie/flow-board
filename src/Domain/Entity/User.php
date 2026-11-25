@@ -44,6 +44,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $enabled = true;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $resetPasswordSelector = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $resetPasswordHashedToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $resetPasswordRequestedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $resetPasswordExpiresAt = null;
+
     /** @var Collection<int, Card> */
     #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'author')]
     private Collection $authoredCards;
@@ -158,6 +170,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEnabled(bool $enabled): static
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getResetPasswordSelector(): ?string
+    {
+        return $this->resetPasswordSelector;
+    }
+
+    public function getResetPasswordHashedToken(): ?string
+    {
+        return $this->resetPasswordHashedToken;
+    }
+
+    public function getResetPasswordRequestedAt(): ?\DateTimeImmutable
+    {
+        return $this->resetPasswordRequestedAt;
+    }
+
+    public function getResetPasswordExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->resetPasswordExpiresAt;
+    }
+
+    public function setResetPasswordRequest(
+        ?string $selector,
+        ?string $hashedToken,
+        ?\DateTimeImmutable $requestedAt,
+        ?\DateTimeImmutable $expiresAt,
+    ): static {
+        $this->resetPasswordSelector = $selector;
+        $this->resetPasswordHashedToken = $hashedToken;
+        $this->resetPasswordRequestedAt = $requestedAt;
+        $this->resetPasswordExpiresAt = $expiresAt;
 
         return $this;
     }

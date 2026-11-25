@@ -29,6 +29,27 @@ login.email: Email
 login.password: Password
 login.remember_me: Remember me
 login.sign_in: Sign in
+login.forgot_password: Forgot your password?
+
+# Reset password
+reset_password.email: Email
+reset_password.new_password: New password
+reset_password.confirm_password: Confirm password
+reset_password.back_to_login: Back to login
+reset_password.request.title: Reset your password
+reset_password.request.help: Enter your email address and we'll send you a link to reset your password.
+reset_password.request.submit: Send reset link
+reset_password.check_email.title: Check your email
+reset_password.check_email.help: If an account matches this email address, a password reset link has been sent to it.
+reset_password.reset.title: Reset your password
+reset_password.reset.submit: Reset password
+reset_password.flash.invalid_token: This password reset link is invalid or has expired.
+reset_password.flash.password_updated: Your password has been changed successfully.
+reset_password.email.subject: Reset your password
+reset_password.email.greeting: Hello,
+reset_password.email.intro: Someone requested a password reset for your FlowBoard account.
+reset_password.email.cta: Reset my password
+reset_password.email.ignore: If you didn't request this, you can safely ignore this email.
 
 # Dashboard
 dashboard.title: Dashboard
